@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zero to Mastery · Efficient Learning Vault</title>
+<style>
+  :root {
+    --primary-glow: rgba(180, 100, 255, 0.2);
+    --secondary-glow: rgba(100, 200, 255, 0.2);
+    --text-light: #f0f0f0;
+    --text-secondary: rgba(240, 240, 240, 0.7);
+    --text-muted: rgba(240, 240, 240, 0.4);
+    
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-bg-hover: rgba(255, 255, 255, 0.08);
+    --glass-card-bg: rgba(10, 10, 15, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border-hover: rgba(255, 255, 255, 0.2);
+    --glass-blur: 16px;
+    --shadow-glow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    
+    --accent-purple: #b464ff;
+    --accent-cyan: #64c8ff;
+    --code-bg: rgba(5, 5, 10, 0.85);
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body { 
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+    min-height: 100vh; 
+    background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, var(--primary-glow) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 80% 50%, var(--secondary-glow) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 40% at 20% 80%, rgba(180, 100, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 30% at 50% 100%, rgba(100, 200, 255, 0.15) 0%, transparent 50%),
+        linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+    color: var(--text-light); 
+    line-height: 1.7; 
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .mobile-navbar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: rgba(10, 10, 15, 0.6);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border-bottom: 1px solid var(--glass-border);
+    z-index: 99;
+    align-items: center;
+    padding: 0 16px;
+    box-shadow: var(--shadow-glow);
+  }
+
+  .menu-toggle {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-light);
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s;
+  }
+  .menu-toggle:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--glass-border-hover);
+  }
+
+  .back-portal { 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 8px; 
+    color: var(--accent-cyan); 
+    text-decoration: none; 
+    font-size: 11px; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    padding: 20px 24px; 
+    border-bottom: 1px solid var(--glass-border); 
+    width: 100%; 
+    transition: all 0.3s ease; 
+  }
+  .back-portal:hover { background: rgba(100, 200, 255, 0.1); color: var(--text-light); }
+
+  .sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; background: rgba(10, 10, 15, 0.75); border-right: 1px solid var(--glass-border); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); overflow-y: auto; z-index: 100; padding-bottom: 40px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+  .sidebar-logo { padding: 24px 24px 16px; border-bottom: 1px solid var(--glass-border); margin-bottom: 15px; }
+  .sidebar-logo h2 { color: var(--text-light); font-size: 15px; font-weight: 700; letter-spacing: 0.5px; }
+  .sidebar-logo p  { color: var(--accent-purple); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+  .nav-label { padding: 12px 24px 6px; color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+  .sidebar a.nav-link { display: block; padding: 10px 24px; color: var(--text-secondary); text-decoration: none; font-size: 13.5px; border-left: 3px solid transparent; transition: all .2s ease; }
+  .sidebar a.nav-link:hover, .sidebar a.nav-link.active { background: rgba(255, 255, 255, 0.05); color: var(--text-light); border-left-color: var(--accent-purple); }
+
+  .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 99; }
+
+  .main { margin-left: 280px; min-height: 100vh; }
+
+  .cover { min-height: 70vh; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 80px 24px; position: relative; border-bottom: 1px solid var(--glass-border); }
+  .cover-badge { background: rgba(180, 100, 255, 0.1); color: var(--accent-purple); padding: 6px 18px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 24px; border: 1px solid rgba(180, 100, 255, 0.3); backdrop-filter: blur(8px); }
+  .cover h1 { color: var(--text-light); font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 700; line-height: 1.2; margin-bottom: 20px; letter-spacing: -0.5px; max-width: 850px; text-shadow: 0 2px 10px var(--primary-glow); }
+  .cover h1 span { color: transparent; background: linear-gradient(135deg, #e0e0ff, #a0a0ff); -webkit-background-clip: text; background-clip: text; }
+  .cover-sub { color: var(--text-secondary); font-size: clamp(15px, 2vw, 18px); max-width: 600px; margin: 0 auto 40px; font-weight: 300; }
+  .cover-note { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(var(--glass-blur)); border-radius: 20px; padding: 24px; max-width: 600px; color: var(--text-secondary); font-size: 14.5px; line-height: 1.6; text-align: left; box-shadow: var(--shadow-glow); margin: 0 12px; }
+  .cover-footer { position: absolute; bottom: 28px; color: var(--text-muted); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; width: 100%; text-align: center; padding: 0 20px; }
+
+  .chapter-header { background: rgba(10, 10, 15, 0.4); padding: 60px 24px; border-bottom: 1px solid var(--glass-border); backdrop-filter: blur(8px); margin-top: 0; }
+  .chapter-num { color: var(--accent-cyan); font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .chapter-header h1 { color: var(--text-light); font-size: clamp(22px, 3vw, 34px); font-weight: 600; }
+  .content { padding: 32px 16px; max-width: 1000px; margin: 0 auto; }
+  
+  .section { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(var(--glass-blur)); border-radius: 20px; padding: clamp(20px, 4vw, 32px); margin-bottom: 30px; box-shadow: var(--shadow-glow); transition: all 0.4s ease; word-wrap: break-word; }
+  .section:hover { border-color: var(--glass-border-hover); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4); }
+  .section h2 { color: var(--text-light); font-size: clamp(17px, 3vw, 21px); font-weight: 600; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .section h3 { color: var(--accent-cyan); font-size: 15px; font-weight: 600; margin: 24px 0 10px; }
+  .section p { color: var(--text-secondary); margin-bottom: 12px; font-size: 15px; font-weight: 300; }
+  
+  .section ul { padding-left: 0; list-style: none; }
+  .section ul li { padding: 6px 0 6px 24px; position: relative; font-size: 14.5px; color: var(--text-secondary); font-weight: 300; }
+  .section ul li::before { content: ""; position:absolute; left: 0; top: 15px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-purple); box-shadow: 0 0 10px var(--accent-purple); }
+  
+  .code-block { background: var(--code-bg); border: 1px solid var(--glass-border); border-radius: 14px; padding: 18px; margin: 18px 0; overflow-x: auto; font-family: 'Consolas', 'Courier New', monospace; font-size: 13.5px; -webkit-overflow-scrolling: touch; box-shadow: inset 0 2px 8px rgba(0,0,0,0.5); }
+  .code-block code { color: #E5E7EB; white-space: pre; display: block; }
+  .code-kw { color: #ff64b4; font-weight: 600; } 
+  .code-fn { color: var(--accent-cyan); } 
+  .code-str { color: #ffd264; } 
+  .code-cmt { color: rgba(255, 255, 255, 0.3); font-style: italic; } 
+  .code-num { color: #ff9664; }
+  
+  .compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 18px 0; }
+  .compare-card { background: var(--glass-card-bg); border: 1px solid var(--glass-border); border-radius: 14px; padding: 20px; }
+  .compare-card h4 { color: var(--accent-purple); font-size: 14px; font-weight: 600; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+  
+  .powers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin: 18px 0; }
+  .power-item { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); border-radius: 12px; padding: 14px 18px; border-left: 3px solid var(--accent-cyan); transition: background 0.3s; }
+  .power-item:hover { background: rgba(255, 255, 255, 0.05); }
+  .power-item strong { display: block; color: var(--text-light); font-size: 14px; margin-bottom: 4px; font-weight: 500; }
+  .power-item span { font-size: 13px; color: var(--text-secondary); font-weight: 300; }
+  
+  .callout { border-radius: 14px; padding: 18px 20px; margin: 18px 0; display: flex; gap: 14px; align-items: flex-start; background: var(--glass-card-bg); border: 1px solid var(--glass-border); }
+  .callout-info { border-left: 4px solid var(--accent-cyan); }
+  .callout-warn { border-left: 4px solid #ff9664; }
+  .callout-success { border-left: 4px solid var(--accent-purple); }
+  .callout-icon { font-size: 18px; flex-shrink: 0; }
+  .callout-text { font-size: 14px; color: var(--text-secondary); font-weight: 300; }
+  .callout-text strong { display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); font-weight: 600; }
+
+  .analogy-card { background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(0,0,0,0.2)); border: 1px solid var(--glass-border); border-radius: 18px; padding: 24px; margin: 20px 0; }
+  .analogy-card h4 { color: var(--text-light); font-size: 15px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .analogy-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .analogy-step { background: var(--glass-card-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px; text-align: center; }
+  .analogy-step .step-icon { font-size: 24px; margin-bottom: 8px; }
+  .analogy-step .step-kw { color: var(--accent-purple); font-weight: 700; font-size: 12.5px; font-family: monospace; margin-bottom: 6px; text-transform: uppercase; }
+  .analogy-step .step-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; font-weight: 300; }
+
+  .questions { background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(var(--glass-blur)); border-radius: 20px; padding: 24px; margin: 24px 0; border-top: 4px solid var(--accent-purple); box-shadow: var(--shadow-glow); }
+  .questions h3 { color: var(--text-light); margin-bottom: 16px; font-size: 16px; font-weight: 600; }
+  .q-item { background: var(--glass-card-bg); border: 1px solid var(--glass-border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+  .q-num { color: var(--accent-cyan); font-weight: 700; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .q-text { font-size: 14px; color: var(--text-light); font-weight: 400; }
+
+  .page-footer { text-align: center; padding: 40px 16px; color: var(--text-muted); font-size: 11px; border-top: 1px solid var(--glass-border); letter-spacing: 2px; text-transform: uppercase; margin-top: 60px; }
+
+  @media(max-width:960px) {
+    .mobile-navbar { display: flex; }
+    .sidebar { transform: translateX(-100%); width: 280px; box-shadow: 5px 0 25px rgba(0,0,0,0.5); }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-overlay.open { display: block; }
+    .main { margin-left:0; } 
+    .content { padding: 24px 12px; } 
+    .chapter-header { padding: 60px 16px 40px 16px; margin-top: 60px; }
+    .cover { min-height: auto; padding: 120px 16px 40px 16px; }
+    .cover-note { margin: 0; border-radius: 16px; }
+    .cover-footer { position: relative; bottom: auto; margin-top: 60px; padding: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="mobile-navbar"><button class="menu-toggle" id="menuBtn">☰ <span>Menu</span></button></div>
+<div class="sidebar-overlay" id="overlay"></div>
+<nav class="sidebar" id="sidebar">
+  <a href="#" class="back-portal">← Knowledge Vault</a>
+  <div class="sidebar-logo"><h2>ZERO TO MASTERY</h2><p>Efficient Learning</p></div>
+  <div class="nav-label">Core Modules</div>
+  <a href="#principles" class="nav-link">🧠 1. Principles</a>
+  <a href="#lies" class="nav-link">⚠️ 2. The Lies</a>
+  <a href="#pillars" class="nav-link">🏛️ 3. Pillars</a>
+  <a href="#science" class="nav-link">🔬 4. The Science</a>
+  <a href="#techniques" class="nav-link">⚙️ 5. Techniques</a>
+  <div class="nav-label">Lifetime Ref</div>
+  <a href="#thankyou" class="nav-link">🙏 6. Thank You</a>
+</nav>
+
+<div class="main">
+  <section id="cover" class="cover">
+    <div class="cover-badge">Course Transcription · Glassmorphism Vault</div>
+    <h1>Efficient Learning <br><span>Zero to Mastery Blueprint</span></h1>
+    <p class="cover-sub">Principles, science, techniques — compiled into a single interactive architecture.</p>
+    <div class="cover-note">🎯 <strong>Architect Note:</strong> High-density extraction of 25+ books / studies. Summarized for retention: growth mindset, deliberate practice, interleaving, memory palaces, and lifelong learning frameworks.</div>
+    <div class="cover-footer">Self-Learning Paradigm | Active Recall Engine</div>
+  </section>
+
+  <div class="content">
+    <!-- PRINCIPLES -->
+    <div id="principles" class="chapter-header"><div class="chapter-num">section 1</div><h1>🧠 Principles · Mindset shifts</h1></div>
+    <div class="section"><h2>📈 Compound Learning & Pareto 80/20</h2><p>Small daily improvements (1% better each day) double your ability in 70 days. Pareto Principle: 20% of efforts yield 80% of results — eliminate noise, focus on vital few.</p><div class="powers-grid"><div class="power-item"><strong>Skill stacking</strong><span>Combine top-20% skills (coding + communication + business) to create unique value.</span></div><div class="power-item"><strong>Failures don’t count</strong><span>Only your last success defines you. Each failure is feedback, not a stain.</span></div></div><div class="compare-grid"><div class="compare-card"><h4>🎯 Choice vs Chore</h4><p>Treat learning as a <strong>choice</strong> → intrinsic drive. Chores drain willpower; choices empower.</p></div><div class="compare-card"><h4>💡 It’s all in the frame</h4><p>Obstacle = growth signal. Beginner mindset: “I’m not there yet” vs fixed attitude.</p></div></div><div class="questions"><h3>⚡ Principle recall</h3><div class="q-item"><div class="q-num">Q1</div><div class="q-text">How does compound learning beat cramming? Why is the first 20% of a topic most valuable?</div></div><div class="q-item"><div class="q-num">Q2</div><div class="q-text">Explain skill stacking with one example from your career or study.</div></div></div></div>
+
+    <!-- LIES SECTION -->
+    <div id="lies" class="chapter-header"><div class="chapter-num">section 2</div><h1>⚠️ The Lies · Debunked myths</h1></div>
+    <div class="section"><h2>🚫 Follow your passion, 10k hours rule & one guru</h2><p>Passion emerges after mastery (craftsman mindset). 10,000 hours is not enough; efficient strategies + genetics + luck matter. Never trust a single source — triangulate.</p><div class="callout callout-info"><div class="callout-icon">⚠️</div><div class="callout-text"><strong>Counterintuitive truth</strong>“Follow your passion” fails because work provides autonomy/mastery/purpose. Risk is mandatory: butterflies = growth zone.</div></div><div class="code-block"><code><span class="code-cmt"># Reframe learning mantra</span><br><span class="code-fn">while</span> learning:<br>    <span class="code-fn">if</span> obstacle_encountered:<br>        <span class="code-kw">print</span>(<span class="code-str">"This is where my brain grows"</span>)<br>    <span class="code-fn">else</span>:<br>        use_pareto()  <span class="code-cmt"># remove 80% noise</span></code></div><div class="questions"><div class="q-item"><div class="q-num">Myth check</div><div class="q-text">Why is “10,000 hours” misleading? Name two factors beyond raw practice.</div></div><div class="q-item"><div class="q-num">Risk reframe</div><div class="q-text">How can feeling butterflies indicate efficient learning?</div></div></div></div>
+
+    <!-- PILLARS -->
+    <div id="pillars" class="chapter-header"><div class="chapter-num">section 3</div><h1>🏛️ Four Pillars · Foundational framework</h1></div>
+    <div class="section"><h2>🎮 Everything is a game + Feynman technique + Trunk knowledge + Efficiency > grit</h2><p><strong>Growth mindset</strong> & internal locus of control → you shape outcomes. <strong>Feynman:</strong> teach it simply → true understanding. <strong>Trunk based knowledge:</strong> master fundamentals (trunk) before leaves (trends). <strong>Efficiency trumps grit:</strong> busy ≠ productive; smart strategies beat raw hours.</p><div class="analogy-card"><h4>🧩 Feynman Technique Analogy</h4><div class="analogy-steps"><div class="analogy-step"><div class="step-icon">📘</div><div class="step-kw">Step 1</div><div class="step-desc">Pick concept → write explanation as if teaching a child.</div></div><div class="analogy-step"><div class="step-icon">🕳️</div><div class="step-kw">Step 2</div><div class="step-desc">Identify gaps where explanation breaks.</div></div><div class="analogy-step"><div class="step-icon">🔄</div><div class="step-kw">Step 3</div><div class="step-desc">Review & simplify again until jargon-free.</div></div></div></div><div class="powers-grid"><div class="power-item"><strong>Trunk-based knowledge</strong><span>Foundations last decades. Leaves (frameworks) change quickly.</span></div><div class="power-item"><strong>Efficiency > Grit</strong><span>Working 80h inefficiently < 20h deliberate, focused learning.</span></div></div><div class="questions"><div class="q-item"><div class="q-num">Recall pillar</div><div class="q-text">Why is the “trunk” more valuable than “leaves” for lifelong learning?</div></div><div class="q-item"><div class="q-num">Apply Feynman</div><div class="q-text">Explain one recent topic in two sentences a 10-year-old would understand.</div></div></div></div>
+
+    <!-- SCIENCE SECTION -->
+    <div id="science" class="chapter-header"><div class="chapter-num">section 4</div><h1>🔬 Neurobiology of learning · Science</h1></div>
+    <div class="section"><h2>🧠 Focus vs diffuse, sleep, myelin, spaced repetition, deliberate practice</h2><p><strong>Focus mode</strong> (laser) + <strong>diffuse mode</strong> (wandering) → back-and-forth builds myelin sheaths, boosting signal speed. Sleep washes toxins, consolidates memory. <strong>Spaced repetition</strong> flattens forgetting curve. <strong>Deliberate practice</strong> (edge of ability, immediate feedback, specific goals) unlocks breakthroughs.</p><div class="compare-grid"><div class="compare-card"><h4>📖 Passive vs Active learning</h4><p>Passive (watching) feels easy but creates illusion of competence. Active recall & self-testing builds durable long-term memory.</p></div><div class="compare-card"><h4>⏳ Procrastination science</h4><p>Triggered by emotional avoidance → start small (Pomodoro 25min). Starting reduces negative feeling within minutes.</p></div></div><div class="code-block"><code><span class="code-cmt"># Spaced repetition simulation</span><br>schedule = {<span class="code-str">"day1"</span>:<span class="code-str">"review"</span>, <span class="code-str">"day3"</span>:<span class="code-str">"recall"</span>, <span class="code-str">"day7"</span>:<span class="code-str">"test"</span>, <span class="code-str">"day30"</span>:<span class="code-str">"final"</span>}<br><span class="code-fn">for</span> day <span class="code-fn">in</span> schedule:<br>    active_recall(schedule[day])  <span class="code-cmt"># strengthens synapses</span></code></div><div class="questions"><div class="q-item"><div class="q-num">Neuroscience check</div><div class="q-text">What happens to myelin when you switch between focus & diffuse modes? Why is sleep mandatory for learning?</div></div><div class="q-item"><div class="q-num">Deliberate practice</div><div class="q-text">How can you apply immediate feedback to a self-study project today?</div></div></div></div>
+
+    <!-- TECHNIQUES SECTION (condensed with core methods) -->
+    <div id="techniques" class="chapter-header"><div class="chapter-num">section 5</div><h1>⚙️ Techniques · Master tools</h1></div>
+    <div class="section"><h2>🍅 Pomodoro, Interleaving, Memory Palace, Einstellung, Habits, System vs Goals</h2><p><strong>Pomodoro:</strong> 25min focus + 5min diffuse → conquers procrastination. <strong>Interleaving:</strong> mix different skills (e.g., coding + design + speaking) to boost creativity. <strong>Einstellung effect:</strong> rigid mindset blocks solutions → always ask “what’s option C?”. <strong>Habits:</strong> cue-routine-reward loop, “don’t break the chain” method. <strong>System vs goals:</strong> systems (daily 20min) outperform rigid goals long-term.</p><div class="analogy-card"><h4>🏛️ Method of Loci (Memory Palace)</h4><div class="analogy-steps"><div class="analogy-step"><div class="step-icon">🏠</div><div class="step-kw">Place</div><div class="step-desc">Use familiar location (your home).</div></div><div class="analogy-step"><div class="step-icon">🎴</div><div class="step-kw">Image</div><div class="step-desc">Associate items with vivid, bizarre scenes.</div></div><div class="analogy-step"><div class="step-icon">🔗</div><div class="step-kw">Story</div><div class="step-desc">Connect scenes into narrative → recall in reverse.</div></div></div></div><div class="powers-grid"><div class="power-item"><strong>Deep work</strong><span>Intense, distraction-free sessions build rare valuable skills immune to automation.</span></div><div class="power-item"><strong>Parkinson’s law</strong><span>Work expands to fill time → set tight deadlines (Pomodoro).</span></div><div class="power-item"><strong>Stakes & rewards</strong><span>Announce goals, attach consequence (e.g., pay $100) to boost accountability.</span></div><div class="power-item"><strong>Concepts > facts</strong><span>Facts are googled; conceptual chunking solves novel problems.</span></div></div><div class="questions"><div class="q-item"><div class="q-num">Technique integration</div><div class="q-text">Design a weekly study plan using interleaving & Pomodoro. How does Einstellung block you?</div></div><div class="q-item"><div class="q-num">Habit formation</div><div class="q-text">Using “don’t break the chain”, what is one atomic habit you will start tomorrow?</div></div></div></div>
+
+    <!-- LIFELONG LEARNING - THANK YOU -->
+    <div id="thankyou" class="chapter-header"><div class="chapter-num">final lesson</div><h1>🙏 Lifelong Learning · Zero to Mastery philosophy</h1></div>
+    <div class="section"><h2>🌱 You suck → obstacle = growth. Embrace the beginner's mindset forever.</h2><p>Learning is a lifelong journey. Deliberate practice, skill stacking, community accountability, and the joy of struggle rewire your brain. “Your cup is half empty” → always ready to integrate new ideas. Failure is data. Enjoy the process, surround yourself with learners, and remember: the brain grows when you make mistakes, not when you get it right.</p><div class="callout callout-success"><div class="callout-icon">🏆</div><div class="callout-text"><strong>Zero to Mastery community</strong><br>You are the average of the five people you surround yourself with. Join peers who uplift, challenge and hold you accountable.</div></div><div class="questions"><div class="q-item"><div class="q-num">final reflection</div><div class="q-text">What single principle or technique will you implement this week to become 1% more efficient?</div></div><div class="q-item"><div class="q-num">growth commitment</div><div class="q-text">Write one statement that reframes “I can’t learn this” into a growth mindset affirmation.</div></div></div></div>
+    <footer class="page-footer">Knowledge Architecture · All core transcripts condensed into glassmorphism vault | Active recall modules embedded</footer>
+  </div>
+</div>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  const navLinks = document.querySelectorAll('.nav-link');
+  function toggleSidebar() { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); }
+  menuBtn.addEventListener('click', toggleSidebar);
+  overlay.addEventListener('click', toggleSidebar);
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if(window.innerWidth <= 960) toggleSidebar();
+      navLinks.forEach(item => item.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+  const hash = window.location.hash;
+  if(hash) document.querySelector(`.nav-link[href="${hash}"]`)?.classList.add('active');
+</script>
+</body>
+</html>
