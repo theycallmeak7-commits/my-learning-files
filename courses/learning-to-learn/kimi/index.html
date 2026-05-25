@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Efficient Learning: Zero to Mastery — Knowledge Vault</title>
+<style>
+  :root {
+    --bg-dark: #0B0F19;
+    --bg-surface: #111827;
+    --bg-card: #1F2937;
+    --border-color: #374151;
+    --border-accent: #4B5563;
+
+    --accent-emerald: #10B981;
+    --accent-glow: rgba(16, 185, 129, 0.15);
+    --accent-cyan: #06B6D4;
+
+    --text-primary: #F9FAFB;
+    --text-secondary: #9CA3AF;
+    --text-muted: #6B7280;
+
+    --code-bg: #030712;
+    --code-text: #34D399;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg-dark); color: var(--text-primary); line-height: 1.7; }
+
+  /* PREMIUM SIDEBAR NAVIGATION */
+  .sidebar { position: fixed; top: 0; left: 0; width: 280px; height: 100vh; background: var(--bg-surface); border-right: 1px solid var(--border-color); overflow-y: auto; z-index: 100; padding-bottom: 40px; }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border-accent); border-radius: 4px; }
+  .sidebar-logo { padding: 24px 24px 16px; border-bottom: 1px solid var(--border-color); margin-bottom: 15px; }
+  .sidebar-logo h2 { color: var(--text-primary); font-size: 15px; font-weight: 700; letter-spacing: 0.5px; }
+  .sidebar-logo p  { color: var(--accent-emerald); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+  .nav-label { padding: 12px 24px 6px; color: var(--text-muted); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+  .sidebar a { display: block; padding: 10px 24px; color: var(--text-secondary); text-decoration: none; font-size: 13.5px; border-left: 3px solid transparent; transition: all .2s ease; }
+  .sidebar a:hover, .sidebar a.active { background: rgba(255, 255, 255, 0.03); color: var(--text-primary); border-left-color: var(--accent-emerald); }
+
+  /* MAIN CONTENT CANVAS */
+  .main { margin-left: 280px; min-height: 100vh; }
+
+  /* HERO PREMIUM COVER */
+  .cover { background: radial-gradient(circle at top right, #111827, #0B0F19); min-height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 80px 48px; position: relative; border-bottom: 1px solid var(--border-color); }
+  .cover-badge { background: rgba(16, 185, 129, 0.1); color: var(--accent-emerald); padding: 6px 18px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 24px; border: 1px solid rgba(16, 185, 129, 0.2); }
+  .cover h1 { color: var(--text-primary); font-size: clamp(36px, 5vw, 64px); font-weight: 800; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px; }
+  .cover h1 span { color: transparent; background: linear-gradient(to right, var(--accent-emerald), var(--accent-cyan)); -webkit-background-clip: text; background-clip: text; }
+  .cover-sub { color: var(--text-secondary); font-size: 17px; max-width: 550px; margin: 0 auto 40px; font-weight: 400; }
+  .cover-note { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px 28px; max-width: 550px; color: var(--text-secondary); font-size: 14px; line-height: 1.6; text-align: left; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+  .cover-footer { position: absolute; bottom: 28px; color: var(--text-muted); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+
+  /* SECTION CARDS & MODULE HEADERS */
+  .chapter-header { background: var(--bg-surface); padding: 60px; border-bottom: 1px solid var(--border-color); position: relative; }
+  .chapter-num { color: var(--accent-emerald); font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .chapter-header h1 { color: var(--text-primary); font-size: clamp(24px, 3vw, 36px); font-weight: 700; }
+  .content { padding: 48px 60px; max-width: 1000px; }
+
+  .section { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 14px; padding: 32px; margin-bottom: 30px; box-shadow: 0 4px 25px rgba(0,0,0,0.15); transition: border-color 0.2s; }
+  .section:hover { border-color: var(--border-accent); }
+  .section h2 { color: var(--text-primary); font-size: 19px; font-weight: 600; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 10px; }
+  .section h3 { color: var(--accent-cyan); font-size: 15px; font-weight: 600; margin: 24px 0 10px; }
+  .section p { color: var(--text-secondary); margin-bottom: 12px; font-size: 15px; }
+
+  .section ul { padding-left: 0; list-style: none; }
+  .section ul li { padding: 6px 0 6px 24px; position: relative; font-size: 14.5px; color: var(--text-secondary); }
+  .section ul li::before { content: ""; position:absolute; left: 0; top: 15px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-emerald); box-shadow: 0 0 8px var(--accent-emerald); }
+
+  /* VISUAL ADVANCED COMPONENTS */
+  .code-block { background: var(--code-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; margin: 18px 0; overflow-x: auto; font-family: "SFMono-Regular", Consolas, Menlo, monospace; font-size: 13.5px; }
+  .code-block code { color: #E5E7EB; white-space: pre; }
+  .code-kw { color: #F43F5E; font-weight: 600; } 
+  .code-fn { color: #60A5FA; } 
+  .code-str { color: #FBBF24; } 
+  .code-cmt { color: #4B5563; font-style: italic; } 
+  .code-num { color: #FB923C; }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+  .compare-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; }
+  .compare-card h4 { color: var(--accent-emerald); font-size: 14px; font-weight: 600; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .powers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+  .power-item { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px 18px; border-left: 3px solid var(--accent-cyan); }
+  .power-item strong { display: block; color: var(--text-primary); font-size: 13.5px; margin-bottom: 4px; }
+  .power-item span { font-size: 13px; color: var(--text-secondary); }
+
+  .callout { border-radius: 10px; padding: 16px 20px; margin: 18px 0; display: flex; gap: 14px; align-items: flex-start; background: var(--bg-surface); border: 1px solid var(--border-color); }
+  .callout-info { border-left: 4px solid var(--accent-cyan); }
+  .callout-warn { border-left: 4px solid #F59E0B; }
+  .callout-success { border-left: 4px solid var(--accent-emerald); }
+  .callout-icon { font-size: 18px; flex-shrink: 0; }
+  .callout-text { font-size: 14px; color: var(--text-secondary); }
+  .callout-text strong { display: block; margin-bottom: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-primary); }
+
+  .analogy-card { background: linear-gradient(145deg, var(--bg-surface), var(--bg-card)); border: 1px solid var(--border-color); border-radius: 14px; padding: 24px; margin: 20px 0; }
+  .analogy-card h4 { color: var(--text-primary); font-size: 15px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .analogy-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .analogy-step { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; text-align: center; }
+  .analogy-step .step-icon { font-size: 24px; margin-bottom: 8px; }
+  .analogy-step .step-kw { color: var(--accent-emerald); font-weight: 700; font-size: 12.5px; font-family: monospace; margin-bottom: 6px; text-transform: uppercase; }
+  .analogy-step .step-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; }
+
+  .questions { background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 14px; padding: 24px; margin: 24px 0; border-top: 4px solid var(--accent-emerald); }
+  .questions h3 { color: var(--text-primary); margin-bottom: 16px; font-size: 15.5px; font-weight: 600; }
+  .q-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+  .q-num { color: var(--accent-emerald); font-weight: 700; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .q-text { font-size: 14px; color: var(--text-primary); }
+
+  .page-footer { text-align: center; padding: 32px; color: var(--text-muted); font-size: 11px; border-top: 1px solid var(--border-color); letter-spacing: 2px; text-transform: uppercase; margin-top: 60px; }
+
+  @media(max-width:900px){
+    .sidebar{display:none;} .main{margin-left:0;} .content{padding:32px 20px;} .chapter-header{padding:40px 20px;}
+    .compare-grid, .powers-grid, .analogy-steps { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h2 id="nav-vault-title">EFFICIENT LEARNING</h2>
+    <p id="nav-vault-sub">Zero to Mastery Vault</p>
+  </div>
+  <div class="nav-label">Overview</div>
+  <a href="#cover" class="active">❖ Cover Dashboard</a>
+  <div class="nav-label">Modules & Chapters</div>
+  <a href="#module1">📘 1. Introduction</a>
+  <a href="#module2">🧠 2. The Principles</a>
+  <a href="#module3">⚠️ 3. The Lies</a>
+  <a href="#module4">🏛️ 4. The Pillars</a>
+  <a href="#module5">🔬 5. The Science</a>
+  <a href="#module6">🛠️ 6. The Techniques</a>
+  <a href="#module7">🌱 7. Lifelong Learning</a>
+  <div class="nav-label">Quick Access</div>
+  <a href="#compare-focus">Focus vs Diffuse</a>
+  <a href="#compare-active">Active vs Passive</a>
+  <a href="#analogy-pomodoro">Pomodoro Flow</a>
+  <a href="#questions-main">Knowledge Check</a>
+</nav>
+
+<div class="main">
+
+  <section id="cover" class="cover">
+    <div class="cover-badge">Efficient Learning Blueprint</div>
+    <h1 id="main-vault-title">Zero to Mastery<br><span>Learning Architecture</span></h1>
+    <p class="cover-sub" id="main-vault-sub">A premium interactive vault synthesizing the science, principles, pillars, and proven techniques for becoming a world-class efficient learner.</p>
+    <div class="cover-note">
+      💡 <strong>Architect Note:</strong> This pipeline maps the complete course structure from Andrei Neagoie's "Learning to Learn" — covering mindset shifts, debunked myths, foundational pillars, brain science, and actionable techniques. Navigate via the sidebar to explore each module.
+    </div>
+    <div class="cover-footer">Zero to Mastery · Knowledge Engine</div>
+  </section>
+
+  <!-- MODULE 1: INTRODUCTION -->
+  <section id="module1">
+    <div class="chapter-header">
+      <div class="chapter-num">Module 01</div>
+      <h1>Introduction — The Learning Blueprint</h1>
+    </div>
+    <div class="content">
+      <div class="section">
+        <h2>📘 Course Philosophy & Core Thesis</h2>
+        <p>Welcome to <strong>Efficient Learning: Zero to Mastery</strong>. This course teaches you how to learn anything using the latest science and how to become a world-class performer. Nobody is born smart — we all start at zero.</p>
+        <p>Research tells us intelligence can be changed. Our brains are like a muscle: you can train and grow your brain. Volume and hours spent studying is <em>not</em> the key. The key is to be <strong>efficient</strong>, learn the right things, and not try to be the hardest worker.</p>
+        <div class="callout callout-success">
+          <div class="callout-icon">🎯</div>
+          <div class="callout-text">
+            <strong>Core Insight</strong>
+            The ability to learn more efficiently than your competitors and colleagues will be the main competitive advantage of the future.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>📘 Course Roadmap & Structure</h2>
+        <p>The course is built as a pyramid with seven interconnected modules:</p>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>1. Introduction</strong>
+            <span>Blueprint overview and the Method of Loci exercise</span>
+          </div>
+          <div class="power-item">
+            <strong>2. The Principles</strong>
+            <span>Mindset shifts: compound learning, skill stacking, framing</span>
+          </div>
+          <div class="power-item">
+            <strong>3. The Lies</strong>
+            <span>Debunking myths: passion, risk avoidance, 10,000 hours</span>
+          </div>
+          <div class="power-item">
+            <strong>4. The Pillars</strong>
+            <span>Foundations: growth mindset, Feynman technique, trunk knowledge</span>
+          </div>
+          <div class="power-item">
+            <strong>5. The Science</strong>
+            <span>Brain mechanics: focus/diffuse, memory, motivation, chunking</span>
+          </div>
+          <div class="power-item">
+            <strong>6. The Techniques</strong>
+            <span>Actionable methods: Pomodoro, interleaving, deliberate practice</span>
+          </div>
+          <div class="power-item">
+            <strong>7. Lifelong Learning</strong>
+            <span>Embracing the journey: continuous adaptation and growth</span>
+          </div>
+          <div class="power-item">
+            <strong>Method of Loci</strong>
+            <span>Memory palace technique — spatial memory for recall mastery</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="analogy-card">
+        <h4>🧠 Method of Loci — Memory Palace Workflow</h4>
+        <div class="analogy-steps">
+          <div class="analogy-step">
+            <div class="step-icon">🏠</div>
+            <div class="step-kw">SELECT PALACE</div>
+            <div class="step-desc">Choose a familiar location (your house, school, commute route) that you can visualize vividly in 3D space.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🎭</div>
+            <div class="step-kw">CREATE IMAGES</div>
+            <div class="step-desc">Associate each item with ridiculous, memorable images. Seven of Diamonds = slot machine wearing a diamond ring.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🔗</div>
+            <div class="step-kw">BUILD STORYLINE</div>
+            <div class="step-desc">Connect images in a flowing narrative through your palace. Spatial + story memory = powerful recall.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="questions">
+        <h3>🎯 Knowledge Check — Introduction</h3>
+        <div class="q-item">
+          <div class="q-num">QUESTION 01</div>
+          <div class="q-text">Why is "volume of hours spent studying" considered poor advice for learning?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 02</div>
+          <div class="q-text">What are the two key memory systems that the Method of Loci leverages?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULE 2: THE PRINCIPLES -->
+  <section id="module2">
+    <div class="chapter-header">
+      <div class="chapter-num">Module 02</div>
+      <h1>The Principles — Mindset Architecture</h1>
+    </div>
+    <div class="content">
+      <div class="section">
+        <h2>🧠 Learning vs Winning The System</h2>
+        <p>Most people focus on winning the system (getting good grades, impressing the boss) rather than actual long-term learning. In school and offices, we play a game of optimizing for short-term scores instead of deep retention.</p>
+        <div class="callout callout-warn">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-text">
+            <strong>Critical Reframe</strong>
+            Accepting a job surrounded by people smarter than you — for growth — is a better long-term strategy than just trying to impress your manager.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🧠 What Is Success & The Dip</h2>
+        <p>Success requires <strong>drive and persistence</strong>, not just being smart. Those who succeed take the path less traveled and are willing to take risks and make mistakes.</p>
+        <p>However, not everybody can become anything. There is a possibility you're simply not cut out for a particular path. It's just as important to know <strong>when to quit</strong> and turn around as it is to push through obstacles.</p>
+        <div class="compare-grid">
+          <div class="compare-card">
+            <h4>🚀 Push Through</h4>
+            <p>When you have realistic goals, genetic potential, and incremental progress is visible. The obstacle means you're growing.</p>
+          </div>
+          <div class="compare-card">
+            <h4>🛑 Turn Around</h4>
+            <p>When the dip is structural (e.g., unrealistic physical requirements, mismatched talents). Limited time means smart choices.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🧠 Compound Learning</h2>
+        <p>The idea comes from <strong>compound interest</strong>. Shift focus from cramming huge full-day sessions into small chunks every single day. If you improve by 1% a day, in 70 days you're twice as good.</p>
+        <div class="code-block">
+<code><span class="code-cmt">// Compound Learning Algorithm</span>
+<span class="code-kw">const</span> <span class="code-fn">compoundLearning</span> = () => {
+  <span class="code-kw">let</span> skill = <span class="code-num">1.0</span>;
+  <span class="code-kw">const</span> dailyImprovement = <span class="code-num">0.01</span>; <span class="code-cmt">// 1% per day</span>
+  <span class="code-kw">for</span> (<span class="code-kw">let</span> day = <span class="code-num">1</span>; day <= <span class="code-num">70</span>; day++) {
+    skill *= (<span class="code-num">1</span> + dailyImprovement);
+  }
+  <span class="code-kw">return</span> skill; <span class="code-cmt">// ≈ 2.0x (doubled in 70 days)</span>
+};</code>
+        </div>
+        <p>Spending just <strong>20 minutes each day</strong> on focused learning gives you 2 hours of knowledge per week — compounding over a lifetime.</p>
+      </div>
+
+      <div class="section">
+        <h2>🧠 Failures Don't Count & Choice vs Chore</h2>
+        <p>Failures don't count against you. Every person experiences you as you are <em>right now</em>. They don't care about tests you failed 5 years ago. You can be successful just 1% of the time — what matters is that last success.</p>
+        <p>Learning must be a <strong>choice</strong>, not a chore. Chores are temporary and won't last. When you shift from "I have to" to "I choose to learn 20 minutes each day," the choice will always beat out the chore long-term.</p>
+      </div>
+
+      <div class="section">
+        <h2>🧠 Framing & Pareto Principle</h2>
+        <p>Almost nothing is objective — framing changes everything. A <strong>beginner attitude</strong> says "I am not good enough." A <strong>beginner mindset</strong> says "I am not there yet, but I will learn from others so I can get there."</p>
+        <p>The <strong>Pareto Principle (80-20 rule)</strong>: roughly 80% of results come from 20% of causes. Mastery means being in the top 5%, not being #1 in the world. The initial 80% can be achieved quite fast — focus on eliminating the unnecessary 80% of effort.</p>
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div class="callout-text">
+            <strong>Key Question</strong>
+            Is this the best use of my time? Is this the 20% of work that gives 80% of results?
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🧠 Skill Stacking & Happiness Factors</h2>
+        <p>Instead of getting good at one thing, get good at <strong>multiple things and combine them</strong> in unique ways. You probably will never be the best in the world at any specific skill, but being in the top 20% in several skills makes you unique and valuable.</p>
+        <p>To be an efficient learner, you need to be <strong>happy</strong>. Identify 5-7 happiness factors (work, friends, health, learning, etc.) and monitor them. If you're in a negative space, you're automatically at a disadvantage.</p>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>Work Satisfaction</strong>
+            <span>Enjoyable work directly impacts happiness and learning capacity</span>
+          </div>
+          <div class="power-item">
+            <strong>Friends & Family</strong>
+            <span>Strong social bonds provide emotional foundation for risk-taking</span>
+          </div>
+          <div class="power-item">
+            <strong>Learning & Growth</strong>
+            <span>Daily improvement contributes to intrinsic motivation</span>
+          </div>
+          <div class="power-item">
+            <strong>Health & Fitness</strong>
+            <span>Physical energy enables mental focus and endurance</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🧠 Productivity Time & Self-Learning Paradigm</h2>
+        <p>Everybody is different — some are morning people, some are night owls. Find <strong>your productivity time</strong> and give yourself permission to study when you feel best. Forcing 4am wake-ups when you're not a morning person is a recipe for failure.</p>
+        <p>At the core of self-learning is <strong>personal autonomy</strong>. Nobody's going to tell you to learn a topic. That motivation cannot be taught — it has to come from within. You must choose that path for yourself.</p>
+      </div>
+
+      <div class="questions">
+        <h3>🎯 Knowledge Check — Principles</h3>
+        <div class="q-item">
+          <div class="q-num">QUESTION 01</div>
+          <div class="q-text">What is the mathematical outcome of improving by 1% each day for 70 days?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 02</div>
+          <div class="q-text">How does the "beginner mindset" differ from the "beginner attitude" in framing obstacles?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 03</div>
+          <div class="q-text">Why is skill stacking more practical than aiming to be #1 in a single skill?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULE 3: THE LIES -->
+  <section id="module3">
+    <div class="chapter-header">
+      <div class="chapter-num">Module 03</div>
+      <h1>The Lies — Debunked Myths</h1>
+    </div>
+    <div class="content">
+      <div class="section">
+        <h2>⚠️ Lie #1: Follow Your Passion</h2>
+        <p>Passion is overrated. Just because you like doing something as leisure doesn't mean it should be your career. As soon as leisure turns into work, it often becomes a chore.</p>
+        <div class="callout callout-warn">
+          <div class="callout-icon">🎯</div>
+          <div class="callout-text">
+            <strong>The Craftsman Mindset</strong>
+            Instead of "follow your passion," ask: "How can I improve and have something uniquely valuable to offer the world?" Get so good they can't ignore you.
+          </div>
+        </div>
+        <p>What you actually need is <strong>creativity, control, and impact</strong>. Adopt the craftsman mindset: work hard, put your head down, learn a valuable skill, combine different skills, and get really, really good.</p>
+      </div>
+
+      <div class="section">
+        <h2>⚠️ Lie #2: You Can Avoid Risk</h2>
+        <p>You <strong>cannot</strong> avoid risk. Risk is part of the process. To achieve anything worthwhile, you must tolerate and enjoy taking risks. Those butterflies in your stomach mean you're stretching your boundaries.</p>
+        <p>Those who play it safe get left behind by those who take risks. Remember: failures don't count against you. What matters is that last success.</p>
+      </div>
+
+      <div class="section">
+        <h2>⚠️ Lie #3: Trust This One Person</h2>
+        <p>Never trust just one person. Each person gives advice based on things that worked in <em>their</em> life, which are unique to them. Create the muscle of looking at different opinions from multiple sources.</p>
+        <div class="compare-grid">
+          <div class="compare-card">
+            <h4>❌ The Charlatan</h4>
+            <p>"I'm the only person you should listen to. I'm the one that will get you to success." Often trying to take advantage of you.</p>
+          </div>
+          <div class="compare-card">
+            <h4>✅ The Wise Learner</h4>
+            <p>"Here is what worked for me. Combine it with other sources to form your own unique methods and tactics."</p>
+          </div>
+        </div>
+        <p>The people who tell you they know everything are often the ones who know the least. Most successful learners understand there's usually pros and cons to everything.</p>
+      </div>
+
+      <div class="section">
+        <h2>⚠️ Lie #4: The 10,000 Hours Rule</h2>
+        <p>Popularized by Malcolm Gladwell in <em>Outliers</em>, but debunked by subsequent studies. The original 1993 violinist study was misinterpreted — practice matters, but so do genetics, upbringing, personality, and opportunity.</p>
+        <div class="callout callout-info">
+          <div class="callout-icon">🔬</div>
+          <div class="callout-text">
+            <strong>The Reality</strong>
+            We don't play on an even playing field. But knowing this helps us focus on efficient learning strategies rather than just counting hours.
+          </div>
+        </div>
+        <p>The good news: you don't have to be the hardest worker. Focus on <strong>efficient learning</strong> — learning smart instead of just working hard. Two people spending 10 hours learning will end up at different levels based on technique.</p>
+      </div>
+
+      <div class="questions">
+        <h3>🎯 Knowledge Check — The Lies</h3>
+        <div class="q-item">
+          <div class="q-num">QUESTION 01</div>
+          <div class="q-text">What three things replace "passion" as the true drivers of career satisfaction?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 02</div>
+          <div class="q-text">Why is the 10,000-hour rule considered a lie, and what should you focus on instead?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULE 4: THE PILLARS -->
+  <section id="module4">
+    <div class="chapter-header">
+      <div class="chapter-num">Module 04</div>
+      <h1>The Pillars — Foundational Concepts</h1>
+    </div>
+    <div class="content">
+      <div class="section">
+        <h2>🏛️ Pillar 1: Everything Is A Game</h2>
+        <p>This is one of the most important foundations for efficient learning. When we frame our mindset to think everything is a game, two things happen:</p>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>Growth Mindset</strong>
+            <span>Intelligence can be developed. With effort and strategy, you can get better at anything. Talent is not fixed at birth.</span>
+          </div>
+          <div class="power-item">
+            <strong>Locus of Control</strong>
+            <span>You control your outcomes. Blame yourself for failures (to improve) rather than external factors. Exams are just feedback systems.</span>
+          </div>
+        </div>
+        <p>Studies on London taxi drivers show the <strong>hippocampus grows larger</strong> the more they drive and learn routes. Brains physically adapt. Learning new skills is tangible proof you have control.</p>
+        <div class="callout callout-success">
+          <div class="callout-icon">🎮</div>
+          <div class="callout-text">
+            <strong>Game Reframe</strong>
+            Instead of "I'm not smart enough," say "I'm not smart enough yet." Your player in this world gets more experience points with each challenge.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🏛️ Pillar 2: Feynman Technique</h2>
+        <p>Named after Nobel Prize-winning physicist Richard Feynman. The core idea: <strong>if you can't explain it simply, you don't understand it well enough.</strong></p>
+        <p>Explain concepts as if speaking to a young child. When you stop using jargon and big words, you free yourself from hiding behind pretend knowledge. Teaching creates recall and forces digestion of key concepts.</p>
+        <div class="analogy-card">
+          <h4>🧒 The Child Test Workflow</h4>
+          <div class="analogy-steps">
+            <div class="analogy-step">
+              <div class="step-icon">📚</div>
+              <div class="step-kw">STUDY</div>
+              <div class="step-desc">Learn the topic deeply from multiple sources</div>
+            </div>
+            <div class="analogy-step">
+              <div class="step-icon">👶</div>
+              <div class="step-kw">TEACH</div>
+              <div class="step-desc">Explain it to a child using simple language</div>
+            </div>
+            <div class="analogy-step">
+              <div class="step-icon">🔍</div>
+              <div class="step-kw">IDENTIFY GAPS</div>
+              <div class="step-desc">Where did you get stuck? Go back and study those gaps</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🏛️ Pillar 3: Trunk Based Knowledge</h2>
+        <p>View knowledge as a tree. Start from the <strong>roots and trunk</strong> (fundamentals, principles) before getting to the <strong>leaves</strong> (details, trends).</p>
+        <p>Most people think mastery means learning one thing, then another, then another. Instead, start with the <strong>why</strong> and the fundamentals. When you understand principles first, you can adapt as trends change — the trunk develops new leaves each season.</p>
+        <div class="code-block">
+<code><span class="code-cmt">// Knowledge Tree Architecture</span>
+<span class="code-kw">class</span> <span class="code-fn">KnowledgeTree</span> {
+  <span class="code-fn">constructor</span>() {
+    <span class="code-kw">this</span>.roots = [<span class="code-str">"fundamentals"</span>, <span class="code-str">"principles"</span>, <span class="code-str">"why"</span>];
+    <span class="code-kw">this</span>.trunk = [<span class="code-str">"core concepts"</span>, <span class="code-str">"foundations"</span>];
+    <span class="code-kw">this</span>.leaves = [<span class="code-str">"trends"</span>, <span class="code-str">"details"</span>, <span class="code-str">"quick-expiring knowledge"</span>];
+  }
+  <span class="code-cmt">// Leaves change with seasons; trunk and roots endure</span>
+}</code>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🏛️ Pillar 4: Efficiency Trumps Grit</h2>
+        <p>You don't have to be the hardest worker. Being busy is not a badge of honor — it shows <strong>lack of time management</strong>. Someone studying 80 hours a week with wrong strategies will be surpassed by someone spending less time but being more efficient.</p>
+        <div class="callout callout-success">
+          <div class="callout-icon">⚡</div>
+          <div class="callout-text">
+            <strong>Great News</strong>
+            If you use the right strategies, you can get ahead of others. Most people don't spend time actually learning HOW to learn efficiently.
+          </div>
+        </div>
+      </div>
+
+      <div class="questions">
+        <h3>🎯 Knowledge Check — The Pillars</h3>
+        <div class="q-item">
+          <div class="q-num">QUESTION 01</div>
+          <div class="q-text">What brain region was shown to grow larger in London taxi drivers, proving neuroplasticity?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 02</div>
+          <div class="q-text">Why is trunk-based knowledge more durable than leaf-based knowledge?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 03</div>
+          <div class="q-text">How does the Feynman Technique expose gaps in your understanding?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULE 5: THE SCIENCE -->
+  <section id="module5">
+    <div class="chapter-header">
+      <div class="chapter-num">Module 05</div>
+      <h1>The Science — How Your Brain Works</h1>
+    </div>
+    <div class="content">
+      <div class="section" id="compare-focus">
+        <h2>🔬 Focus vs Diffuse Mode</h2>
+        <p>Barbara Oakley's research discovered two states our brains can be in. Learning depends on going <strong>back and forth</strong> between both modes.</p>
+        <div class="compare-grid">
+          <div class="compare-card">
+            <h4>🎯 FOCUSED MODE</h4>
+            <p>Laser attention on one task. Activates prefrontal cortex. 100% brain power to one activity. Used for sequential problem-solving.</p>
+          </div>
+          <div class="compare-card">
+            <h4>💭 DIFFUSED MODE</h4>
+            <p>Daydreaming, mind wandering. Many brain regions activated. Myelin sheath forms here. Used for creative, intuitive solutions.</p>
+          </div>
+        </div>
+        <p>Going for a walk, sleeping, or just letting your mind wander activates diffuse mode. <strong>Multitasking</strong> drops cognitive capacity from Harvard MBA to 8-year-old level (dual task interference).</p>
+        <div class="callout callout-info">
+          <div class="callout-icon">🧠</div>
+          <div class="callout-text">
+            <strong>Myelin Formation</strong>
+            When you focus intensely, then relax, your brain creates myelin sheaths around neurons — making signals travel faster and more efficiently.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🔬 The Science of Sleep</h2>
+        <p>Being awake creates <strong>toxic products</strong> in the brain. When you sleep, brain cells shrink and fluids flow through gaps to clear toxins. This only happens during sleep because it's energy-intensive.</p>
+        <p>Sleep also organizes knowledge — erasing less important things and strengthening connections for important things. Dreaming about what you're studying <strong>improves memory</strong>. All-nighters are the worst strategy for long-term learning.</p>
+      </div>
+
+      <div class="section">
+        <h2>🔬 Brain Training & Neuroplasticity</h2>
+        <p>Neurons connect via <strong>synapses</strong>. Learning creates more synapses; practice strengthens them. If you don't use them, they disappear. Your brain is either growing or deteriorating — never static.</p>
+        <p>New neurons are born every day in the <strong>hippocampus</strong>. Physical exercise helps brain function by enabling diffuse mode thinking. Use it or lose it.</p>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>Synapse Creation</strong>
+            <span>Every new learning creates new neural connections</span>
+          </div>
+          <div class="power-item">
+            <strong>Synapse Strengthening</strong>
+            <span>Repetition and practice make connections durable</span>
+          </div>
+          <div class="power-item">
+            <strong>Neurogenesis</strong>
+            <span>New neurons born daily in hippocampus when learning</span>
+          </div>
+          <div class="power-item">
+            <strong>Physical Exercise</strong>
+            <span>Enables diffuse mode and stimulates brain growth</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🔬 The Science of Feedback</h2>
+        <p>Without feedback, your rate of learning <strong>diminishes significantly</strong>. Immediate feedback is best — find out you're doing something wrong right away, not after a week.</p>
+        <div class="compare-grid">
+          <div class="compare-card">
+            <h4>✅ Positive Feedback</h4>
+            <p>Best at the beginning. Overcomes self-doubt and obstacles. Makes you enjoy tasks more, leading to continued practice.</p>
+          </div>
+          <div class="compare-card">
+            <h4>⚠️ Negative Feedback</h4>
+            <p>More actionable and effective for experts. Tells you exactly what to fix. Experts vastly prefer criticism over compliments.</p>
+          </div>
+        </div>
+        <p>Stand on the shoulders of giants — learn from others' mistakes. Get coaches, mentors, or communities for feedback.</p>
+      </div>
+
+      <div class="section">
+        <h2>🔬 Procrastination Science</h2>
+        <p>Procrastination is an <strong>emotion management problem</strong>, not a time management problem. Learning activates brain areas associated with pain/negativity. Your brain immediately switches to something positive (Instagram, YouTube).</p>
+        <div class="analogy-card">
+          <h4>🧠 The Procrastination Loop</h4>
+          <div class="analogy-steps">
+            <div class="analogy-step">
+              <div class="step-icon">😰</div>
+              <div class="step-kw">NEGATIVE FEELING</div>
+              <div class="step-desc">Task seems boring, difficult, or scary. Brain detects emotional pain.</div>
+            </div>
+            <div class="analogy-step">
+              <div class="step-icon">📱</div>
+              <div class="step-kw">AVOIDANCE</div>
+              <div class="step-desc">Switch to easy dopamine (social media, videos) for short-term relief.</div>
+            </div>
+            <div class="analogy-step">
+              <div class="step-icon">😔</div>
+              <div class="step-kw">GUILT LOOP</div>
+              <div class="step-desc">Long-term goal suffers. Negative feelings increase. Cycle repeats.</div>
+            </div>
+          </div>
+        </div>
+        <p><strong>The fix:</strong> Getting started is everything. The negative feeling goes away quickly once you begin. Make starting as easy as possible. Use the Pomodoro technique — commit to just 25 minutes.</p>
+      </div>
+
+      <div class="section">
+        <h2>🔬 Short and Long Term Memory</h2>
+        <p>Long-term memory is stored all over the brain. Short-term/working memory (prefrontal cortex) holds approximately <strong>4 chunks</strong> at once.</p>
+        <div class="code-block">
+<code><span class="code-cmt">// The Forgetting Curve</span>
+<span class="code-kw">const</span> forgettingCurve = {
+  <span class="code-str">"1 hour"</span>: <span class="code-num">50</span>,    <span class="code-cmt">// 50% forgotten</span>
+  <span class="code-str">"24 hours"</span>: <span class="code-num">70</span>,  <span class="code-cmt">// 70% forgotten</span>
+  <span class="code-str">"1 week"</span>: <span class="code-num">90</span>     <span class="code-cmt">// 90% forgotten without use</span>
+};
+<span class="code-cmt">// Solution: Spaced repetition flattens this curve</span></code>
+        </div>
+        <p>Move information to long-term memory through <strong>spaced repetition</strong>, connecting concepts to existing knowledge, teaching others (Feynman), and sleep.</p>
+      </div>
+
+      <div class="section" id="compare-active">
+        <h2>🔬 Active vs Passive Learning</h2>
+        <div class="compare-grid">
+          <div class="compare-card">
+            <h4>📺 PASSIVE LEARNING</h4>
+            <p>Listening to podcasts, watching videos, reading without engagement. Feels productive but creates "illusion of competence." Easy but ineffective.</p>
+          </div>
+          <div class="compare-card">
+            <h4>✅ ACTIVE LEARNING</h4>
+            <p>Taking notes, solving problems, building projects, teaching others. Struggle and retrieval strengthen neural connections. Hard but effective.</p>
+          </div>
+        </div>
+        <p><strong>One hour of testing > One hour of studying.</strong> Rereading is a terrible strategy. Retrieval from long-term memory improves future retrieval. Before connecting dots, you must first recall.</p>
+      </div>
+
+      <div class="section">
+        <h2>🔬 The Science of Motivation</h2>
+        <p>Two types: <strong>intrinsic</strong> (autonomy, mastery, purpose) vs <strong>extrinsic</strong> (money, gifts). The over-justification effect: external rewards can <em>decrease</em> intrinsic motivation.</p>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>Autonomy</strong>
+            <span>Control over what you work on and how you work</span>
+          </div>
+          <div class="power-item">
+            <strong>Mastery</strong>
+            <span>The drive to become expert and be recognized for skill</span>
+          </div>
+          <div class="power-item">
+            <strong>Purpose</strong>
+            <span>How your work benefits yourself and others around you</span>
+          </div>
+          <div class="power-item">
+            <strong>Community</strong>
+            <span>Being praised for learning by peers boosts intrinsic drive</span>
+          </div>
+        </div>
+        <p>Extrinsic rewards help start unpleasant tasks. Intrinsic motivation is needed for <strong>long-term</strong> mastery.</p>
+      </div>
+
+      <div class="section">
+        <h2>🔬 It Pays To Not Be Busy</h2>
+        <p>Being busy is <strong>not</strong> a badge of honor — it shows lack of time management. Concert-level violinists had <strong>leisure time</strong>; they weren't constantly on.</p>
+        <p>New neurons in the hippocampus need nurture. Taking breaks enables diffuse mode. More does not always mean better. <strong>Efficiency trumps grit.</strong></p>
+      </div>
+
+      <div class="section">
+        <h2>🔬 Chunking & Problem Solving</h2>
+        <p><strong>Chunking</strong> = breaking knowledge into compact bits that unite into meaning. Bottom-up learning (individual chunks) + top-down learning (big picture connections).</p>
+        <p><strong>Problem solving</strong> is the most in-demand skill for the next 20 years. Focus mode for sequential problems; diffuse mode for creative/intuitive solutions. Some problems are better solved after sleep.</p>
+      </div>
+
+      <div class="section">
+        <h2>🔬 Deliberate Practice</h2>
+        <p>Requires: specific goals, intense focus, immediate feedback, and <strong>frequent discomfort</strong> at the edge of abilities. Takes place outside comfort zone. Not meant to be fun.</p>
+        <div class="callout callout-warn">
+          <div class="callout-icon">🦋</div>
+          <div class="callout-text">
+            <strong>The Butterfly Test</strong>
+            When you feel butterflies in your stomach, you're at the edge of your abilities. That's the zone where real growth happens.
+          </div>
+        </div>
+        <p>Write down progress daily. Seek mentorship. The +1 method: how can I make today slightly harder than yesterday?</p>
+      </div>
+
+      <div class="questions" id="questions-main">
+        <h3>🎯 Knowledge Check — The Science</h3>
+        <div class="q-item">
+          <div class="q-num">QUESTION 01</div>
+          <div class="q-text">What brain structure forms during diffuse mode that makes neural signals travel faster?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 02</div>
+          <div class="q-text">Why is procrastination considered an emotion management problem rather than a time management problem?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 03</div>
+          <div class="q-text">What percentage of new information is forgotten after 24 hours if not reinforced?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 04</div>
+          <div class="q-text">What are the three intrinsic motivators according to Daniel Pink's research?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULE 6: THE TECHNIQUES -->
+  <section id="module6">
+    <div class="chapter-header">
+      <div class="chapter-num">Module 06</div>
+      <h1>The Techniques — Actionable Methods</h1>
+    </div>
+    <div class="content">
+      <div class="section" id="analogy-pomodoro">
+        <h2>🛠️ Pomodoro Technique</h2>
+        <p>Developed by Francesco Cirillo in the late 1980s. The core cycle:</p>
+        <div class="analogy-card">
+          <h4>🍅 The Pomodoro Cycle</h4>
+          <div class="analogy-steps">
+            <div class="analogy-step">
+              <div class="step-icon">🎯</div>
+              <div class="step-kw">25 MIN FOCUS</div>
+              <div class="step-desc">Single task, no interruptions, laser attention. Prefrontal cortex fully engaged.</div>
+            </div>
+            <div class="analogy-step">
+              <div class="step-icon">☕</div>
+              <div class="step-kw">5 MIN BREAK</div>
+              <div class="step-desc">Diffuse mode activation. Walk, stretch, hydrate. Let myelin form.</div>
+            </div>
+            <div class="analogy-step">
+              <div class="step-icon">🔁</div>
+              <div class="step-kw">REPEAT</div>
+              <div class="step-desc">After 4 cycles, take a longer 15-30 minute break. Adapt intervals to your rhythm.</div>
+            </div>
+          </div>
+        </div>
+        <p><strong>Pro tip:</strong> Start with the hardest task first. Even one Pomodoro (25 min) on your worst task beats procrastination. The intervals are flexible — try 10 min focus + 5 min break if needed.</p>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Chunk The Subject</h2>
+        <p>Break down big problems into small, manageable chunks. Start with the most common 100 words in language learning. Create chunked knowledge that becomes automatic — entering "zombie mode" where you don't have to think.</p>
+        <div class="code-block">
+<code><span class="code-cmt">// Chunking Strategy for Learning Spanish</span>
+<span class="code-kw">const</span> spanishRoadmap = [
+  { <span class="code-str">"chunk"</span>: <span class="code-str">"100 most common words"</span>, <span class="code-str">"time"</span>: <span class="code-str">"Week 1"</span> },
+  { <span class="code-str">"chunk"</span>: <span class="code-str">"10 most common verbs"</span>, <span class="code-str">"time"</span>: <span class="code-str">"Week 2"</span> },
+  { <span class="code-str">"chunk"</span>: <span class="code-str">"Basic sentence structure"</span>, <span class="code-str">"time"</span>: <span class="code-str">"Week 3"</span> },
+  { <span class="code-str">"chunk"</span>: <span class="code-str">"Present tense conjugation"</span>, <span class="code-str">"time"</span>: <span class="code-str">"Week 4"</span> }
+];
+<span class="code-cmt">// Each chunk becomes automatic before moving to next</span></code>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Spaced Repetition</h2>
+        <p>Repeat and practice over days, weeks, months — <strong>not all at once</strong>. The forgetting curve shows we lose 50% in 1 hour, 70% in 24 hours, 90% in a week. Spaced repetition flattens this curve.</p>
+        <div class="callout callout-success">
+          <div class="callout-icon">📈</div>
+          <div class="callout-text">
+            <strong>The Spacing Effect</strong>
+            Doing something 20 times in one day is NOT as good as doing it 20 times over 20 days. Each spaced recall strengthens neural consolidation.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Deliberate Practice Revisited</h2>
+        <p>Carve out undistracted focus period daily. Push to edge of ability (+1 method). Seek immediate feedback/mentorship. Write down progress. <strong>Feel butterflies = you're in the zone.</strong></p>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>Undistracted Focus</strong>
+            <span>Use Pomodoro or deep work blocks. No phone, no email, no multitasking.</span>
+          </div>
+          <div class="power-item">
+            <strong>Edge of Ability</strong>
+            <span>+1 method: make today slightly harder than yesterday. Comfortable = not growing.</span>
+          </div>
+          <div class="power-item">
+            <strong>Immediate Feedback</strong>
+            <span>Coach, mentor, community, or self-review. Know right away if you're off track.</span>
+          </div>
+          <div class="power-item">
+            <strong>Progress Tracking</strong>
+            <span>Write down what you did, how long, and how you felt. Data drives improvement.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Create A Roadmap</h2>
+        <p>Don't study without a plan. Research what you need to learn first. Make sure every minute is spent on <strong>relevant, hireable skills</strong>. Use mind maps. Humans overestimate short-term but underestimate long-term potential.</p>
+        <div class="callout callout-info">
+          <div class="callout-icon">🗺️</div>
+          <div class="callout-text">
+            <strong>Roadmap Checklist</strong>
+            Research industry needs → Check job postings → Read reviews of resources → Identify quality content → Write down your path → Focus on most important topics first
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Interleaving</h2>
+        <p>Mix up learning with different problems and techniques. Don't practice one method over and over. A baseball player hitting <strong>random pitches</strong> (fastballs, curveballs, change-ups) does better than 45 of the same pitch.</p>
+        <p>Applies to skill stacking too — combine different skills to form unique connections nobody else has.</p>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Einstellung (Rigid Mindset)</h2>
+        <p><strong>Einstellung</strong> = rigid mindset that blocks new ideas. The solution is <strong>integrative complexity</strong> — willingness to accept multiple perspectives. Keep your cup half empty.</p>
+        <div class="callout callout-warn">
+          <div class="callout-icon">🧠</div>
+          <div class="callout-text">
+            <strong>Option C Test</strong>
+            You thought of Option A and Option B. Is there an Option C? Strong opinions often cover insecurities. Bill Gates constantly reads new books and asks questions.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Importance of Community</h2>
+        <p>You need a community of learners. Blind spots, immediate feedback, accountability. <strong>"You are the average of the 5 people you hang out with most."</strong></p>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>Blind Spot Detection</strong>
+            <span>Others see what you cannot see in your own work</span>
+          </div>
+          <div class="power-item">
+            <strong>Immediate Feedback</strong>
+            <span>Community provides real-time correction and encouragement</span>
+          </div>
+          <div class="power-item">
+            <strong>Accountability</strong>
+            <span>Public commitments make quitting harder and success more likely</span>
+          </div>
+          <div class="power-item">
+            <strong>Motivation</strong>
+            <span>Seeing others progress pushes you to maintain your own habits</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Habits Revisited</h2>
+        <p>Habits are <strong>energy savers</strong> for the brain. Structure: Cue → Routine → Reward → Belief. Don't rely on willpower — it's a terrible strategy.</p>
+        <div class="code-block">
+<code><span class="code-cmt">// Habit Formation Architecture</span>
+<span class="code-kw">const</span> habitLoop = {
+  <span class="code-str">"cue"</span>: <span class="code-str">"gym clothes by bed"</span>,      <span class="code-cmt">// trigger</span>
+  <span class="code-str">"routine"</span>: <span class="code-str">"put on clothes → workout"</span>, <span class="code-cmt">// automatic action</span>
+  <span class="code-str">"reward"</span>: <span class="code-str">"endorphins + sense of accomplishment"</span>,
+  <span class="code-str">"belief"</span>: <span class="code-str">"exercise makes me stronger"</span>
+};
+<span class="code-cmt">// James Clear's 4 Laws: Obvious, Easy, Attractive, Satisfying</span></code>
+        </div>
+        <p><strong>Don't Break the Chain</strong> (Jerry Seinfeld method): Mark an X on your calendar every day you practice. The visual chain motivates you to keep going.</p>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ System vs Goals</h2>
+        <div class="compare-grid">
+          <div class="compare-card">
+            <h4>🎯 GOALS</h4>
+            <p>Rigid objectives with clear endpoints. Good for short-term simple tasks. Prone to procrastination if too big. "Build this project" or "Lose 25 pounds."</p>
+          </div>
+          <div class="compare-card">
+            <h4>⚙️ SYSTEMS</h4>
+            <p>Flexible processes you do regularly. Adapt to luck and new situations. "Work 20 minutes each day" or "Eat healthier." Better for long-term.</p>
+          </div>
+        </div>
+        <p>Success = Skills × Luck. Systems incorporate the luck factor. Goals assume full control. For career and lifelong learning, use <strong>systems</strong>. For today's email, use goals.</p>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Power of The Senses</h2>
+        <p>Imagery, metaphors, analogies, visualizations, stories. Handwriting helps more than typing. Your first kiss is memorable because <strong>all senses fired</strong>.</p>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>Visual Memory</strong>
+            <span>Diagrams, infographics, and mental images create strong recall anchors</span>
+          </div>
+          <div class="power-item">
+            <strong>Emotional Hooks</strong>
+            <span>Funny notes, stories, and novel experiences strengthen neural pathways</span>
+          </div>
+          <div class="power-item">
+            <strong>Environmental Design</strong>
+            <span>Dedicated study areas with flowers, music, and natural light stimulate senses</span>
+          </div>
+          <div class="power-item">
+            <strong>Analogies & Metaphors</strong>
+            <span>Connect new concepts to existing knowledge through familiar comparisons</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Method of Loci (Revisited)</h2>
+        <p>Memory palace technique using <strong>spatial memory</strong>. Humans are evolutionarily good at 3D locations but bad at abstract data. Associate items with ridiculous images in familiar locations.</p>
+        <div class="analogy-card">
+          <h4>🏛️ Memory Palace Construction</h4>
+          <div class="analogy-steps">
+            <div class="analogy-step">
+              <div class="step-icon">🏠</div>
+              <div class="step-kw">SELECT PALACE</div>
+              <div class="step-desc">Your house, school, or daily commute route</div>
+            </div>
+            <div class="analogy-step">
+              <div class="step-icon">🎨</div>
+              <div class="step-kw">PAINT IMAGES</div>
+              <div class="step-desc">Make them ridiculous, emotional, and multisensory</div>
+            </div>
+            <div class="analogy-step">
+              <div class="step-icon">🎬</div>
+              <div class="step-kw">WALK THE PATH</div>
+              <div class="step-desc">Mentally navigate your palace to recall in order or reverse</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Pareto Principle Revisited</h2>
+        <p>Top 5% is achievable — you don't need to be #1 in the world. Find the critical 20% that gives 80% results. <strong>Remove the unnecessary.</strong></p>
+        <div class="callout callout-info">
+          <div class="callout-icon">📊</div>
+          <div class="callout-text">
+            <strong>Wikipedia Insight</strong>
+            7.2% of Wikipedia pages get 87% of monthly views. You could build a product with just 7.2% of articles and capture 87% of traffic.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Parkinson's Law</h2>
+        <p>Work expands to fill the time available. If given a week, it takes a week. If given 24 hours, it takes 24 hours. Use <strong>small deadlines and timeboxes</strong> to constrain procrastination.</p>
+        <div class="code-block">
+<code><span class="code-cmt">// Parkinson's Law Application</span>
+<span class="code-kw">const</span> <span class="code-fn">timeboxTask</span> = (task, hours) => {
+  <span class="code-kw">const</span> deadline = <span class="code-kw">new</span> <span class="code-fn">Date</span>(Date.<span class="code-fn">now</span>() + hours * <span class="code-num">3600000</span>);
+  <span class="code-cmt">// Task will expand to fill available time</span>
+  <span class="code-cmt">// Solution: constrain time, increase focus</span>
+  <span class="code-kw">return</span> { task, deadline, strategy: <span class="code-str">"Pomodoro + deep work"</span> };
+};</code>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Deep Work</h2>
+        <p>Period of <strong>intense focus</strong> with no distractions. Push cognitive abilities to limit. Opposite of shallow work (semi-distracted tasks like organizing, errands).</p>
+        <p><strong>Why it matters:</strong> Shallow work will be automated by AI. Deep work — hard problem solving — makes you valuable and irreplaceable.</p>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>Dedicated Workspace</strong>
+            <span>Engage all senses. Stimulating environment primes focus.</span>
+          </div>
+          <div class="power-item">
+            <strong>Exact End Time</strong>
+            <span>Know when focus ends. Parkinson's law works in your favor.</span>
+          </div>
+          <div class="power-item">
+            <strong>Power Ups</strong>
+            <span>Sleep, exercise, happiness factors at optimum before starting.</span>
+          </div>
+          <div class="power-item">
+            <strong>Immediate Feedback</strong>
+            <span>Coach, mentor, or self-review during the session.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Stakes And Rewards</h2>
+        <p>Need both <strong>rewards</strong> (feel good, motivation) and <strong>stakes</strong> (something on the line). Announce goals with deadlines to community. If you don't accomplish, pay $100 or skip social events.</p>
+        <p>Small rewards stimulate internal motivation for long-lasting change. But without stakes, there's no negative consequence for failure — and you're more likely to not care.</p>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Concepts vs Facts</h2>
+        <div class="compare-grid">
+          <div class="compare-card">
+            <h4>📋 FACTS</h4>
+            <p>Cheap and easy to Google. Dates, names, specific data. Anybody can learn facts. Recognition-based learning.</p>
+          </div>
+          <div class="compare-card">
+            <h4>🧩 CONCEPTS</h4>
+            <p>Valuable and hard to Google. High-level connections between chunks. CEOs solve problems using concepts. Recollection-based mastery.</p>
+          </div>
+        </div>
+        <p>Focus on foundations and principles first. The Feynman Technique proves concept mastery — if you can teach the concept simply, you truly understand it.</p>
+      </div>
+
+      <div class="section">
+        <h2>🛠️ Test Yourself</h2>
+        <p>Passive watching doesn't work. Must practice and test. Pause videos/podcasts and summarize. Quiz yourself. Understand <strong>WHY</strong> you got things wrong.</p>
+        <div class="callout callout-warn">
+          <div class="callout-icon">✍️</div>
+          <div class="callout-text">
+            <strong>Active Recall Strategy</strong>
+            Highlight a textbook, then BEFORE reading the highlights, try to recall what you learned in that section. Test first, verify second.
+          </div>
+        </div>
+        <p>Do the uncomfortable work of self-testing. Every mistake is feedback that brings you closer to mastery.</p>
+      </div>
+
+      <div class="questions">
+        <h3>🎯 Knowledge Check — Techniques</h3>
+        <div class="q-item">
+          <div class="q-num">QUESTION 01</div>
+          <div class="q-text">What is the core cycle of the Pomodoro Technique and why does it leverage both brain modes?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 02</div>
+          <div class="q-text">How does interleaving differ from blocked practice, and why is it more effective?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 03</div>
+          <div class="q-text">What is the "Option C" test and how does it combat the Einstellung effect?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 04</div>
+          <div class="q-text">Why are systems better than goals for long-term learning, and how do they account for luck?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">QUESTION 05</div>
+          <div class="q-text">What is the difference between shallow work and deep work, and why is deep work more future-proof?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULE 7: LIFELONG LEARNING -->
+  <section id="module7">
+    <div class="chapter-header">
+      <div class="chapter-num">Module 07</div>
+      <h1>Lifelong Learning — The Journey Continues</h1>
+    </div>
+    <div class="content">
+      <div class="section">
+        <h2>🌱 The Zero to Mastery Philosophy</h2>
+        <p>Your journey is just beginning. The zero to mastery philosophy is that we will <strong>always need to learn</strong>. We will always need to adapt to different situations.</p>
+        <p>We embrace the statement <strong>"you suck"</strong> because we know this means we have an obstacle to overcome to make our brain stronger. Failing is a way for us to get stronger.</p>
+        <div class="callout callout-success">
+          <div class="callout-icon">🚀</div>
+          <div class="callout-text">
+            <strong>The Competitive Advantage</strong>
+            The ability to learn more efficiently than your competitors and colleagues will be the main competitive advantage of the future.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🌱 Key Takeaways for Life</h2>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>Brain Grows Through Struggle</strong>
+            <span>Your brain grows when you get things wrong, not when you get them right. Mistakes are good.</span>
+          </div>
+          <div class="power-item">
+            <strong>Enjoy What You Learn</strong>
+            <span>If you don't enjoy it, those who do will win out in the long run. Choose wisely.</span>
+          </div>
+          <div class="power-item">
+            <strong>Never Stop Learning</strong>
+            <span>Once you become good at one thing, move to the next. Life is a long journey of learning.</span>
+          </div>
+          <div class="power-item">
+            <strong>Use Your Tools</strong>
+            <span>You now have the principles, lies, pillars, science, and techniques to go from zero to mastery.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🌱 Final Architect's Note</h2>
+        <p>This vault has mapped the complete learning architecture from Andrei Neagoie's "Learning to Learn: Zero to Mastery" course. The framework is designed as a pyramid:</p>
+        <ul>
+          <li><strong>Foundation:</strong> Principles (mindset) + Lies (myth-busting) + Pillars (core concepts)</li>
+          <li><strong>Structure:</strong> Science (how the brain works)</li>
+          <li><strong>Application:</strong> Techniques (actionable methods)</li>
+          <li><strong>Journey:</strong> Lifelong Learning (continuous growth)</li>
+        </ul>
+        <p>Return to this vault whenever you need to refresh your learning strategy. The techniques are proven, the science is real, and the framework is yours to apply.</p>
+      </div>
+
+      <div class="questions">
+        <h3>🎯 Final Reflection</h3>
+        <div class="q-item">
+          <div class="q-num">REFLECTION 01</div>
+          <div class="q-text">What is the one technique from this vault you will implement starting today?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">REFLECTION 02</div>
+          <div class="q-text">How will you measure your learning efficiency 30 days from now?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    Zero to Mastery · Efficient Learning Vault · Premium Knowledge Architecture
+  </footer>
+</div>
+
+</body>
+</html>

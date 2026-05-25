@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coding5s Python Learning Vault</title>
+<style>
+  :root {
+    --indigo: #4F46E5; --violet: #7C3AED; --indigo-light: #EEF2FF;
+    --indigo-border: #C7D2FE; --indigo-mid: #6366F1; --text-dark: #1E1B4B;
+    --text-body: #374151; --text-muted: #6B7280; --bg: #F8F9FF; --white: #ffffff;
+    --green: #059669; --green-light: #ECFDF5; --amber: #D97706; --amber-light: #FFFBEB;
+    --red: #DC2626; --code-bg: #1E1B4B; --code-text: #A5F3FC;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text-body); line-height: 1.75; }
+
+  .sidebar { position: fixed; top: 0; left: 0; width: 265px; height: 100vh; background: var(--indigo); overflow-y: auto; z-index: 100; padding-bottom: 40px; }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+  .sidebar-logo { padding: 22px 20px 14px; border-bottom: 1px solid rgba(255,255,255,0.12); margin-bottom: 10px; }
+  .sidebar-logo h2 { color: white; font-size: 14.5px; font-weight: 700; }
+  .sidebar-logo p  { color: rgba(255,255,255,0.55); font-size: 11.5px; margin-top: 3px; }
+  .nav-label { padding: 10px 20px 4px; color: rgba(255,255,255,0.4); font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+  .sidebar a { display: block; padding: 8px 20px; color: rgba(255,255,255,0.75); text-decoration: none; font-size: 13px; border-left: 3px solid transparent; transition: all .18s; }
+  .sidebar a:hover, .sidebar a.active { background: rgba(255,255,255,0.1); color: white; border-left-color: #A5B4FC; }
+
+  .main { margin-left: 265px; min-height: 100vh; }
+
+  .cover { background: linear-gradient(135deg, #312E81 0%, var(--violet) 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; padding: 80px 48px; position: relative; overflow: hidden; }
+  .cover::before { content:""; position:absolute; top:-120px; right:-120px; width:420px; height:420px; border-radius:50%; background:rgba(255,255,255,0.04); }
+  .cover-badge { background:rgba(255,255,255,0.12); color:white; padding:6px 20px; border-radius:999px; font-size:11.5px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; margin-bottom:28px; display:inline-block; border:1px solid rgba(255,255,255,0.25); }
+  .cover h1 { color:white; font-size:clamp(38px,6vw,72px); font-weight:900; line-height:1.08; margin-bottom:18px; }
+  .cover h1 span { color:#A5B4FC; }
+  .cover-sub { color:rgba(255,255,255,0.72); font-size:17px; max-width:500px; margin:0 auto 44px; }
+  .cover-note { background:rgba(255,255,255,0.09); border:1px solid rgba(255,255,255,0.18); border-radius:14px; padding:22px 30px; max-width:500px; color:rgba(255,255,255,0.82); font-size:14.5px; line-height:1.65; }
+  .cover-footer { position:absolute; bottom:28px; color:rgba(255,255,255,0.4); font-size:12px; letter-spacing:2.5px; text-transform:uppercase; }
+
+  .chapter-header { background:linear-gradient(135deg, var(--indigo) 0%, var(--violet) 100%); padding:56px 60px 44px; position:relative; overflow:hidden; }
+  .chapter-header::after { content:attr(data-num); position:absolute; right:48px; top:50%; transform:translateY(-50%); font-size:110px; font-weight:900; color:rgba(255,255,255,0.07); line-height:1; pointer-events:none; }
+  .chapter-num { color:#A5B4FC; font-size:11.5px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+  .chapter-header h1 { color:white; font-size:clamp(26px,4vw,42px); font-weight:800; position:relative; z-index:1; }
+  .content { padding: 48px 60px; max-width: 900px; }
+  .section { background:white; border:1px solid var(--indigo-border); border-radius:16px; padding:28px 32px; margin-bottom:26px; border-left:5px solid var(--indigo); box-shadow:0 2px 14px rgba(79,70,229,0.05); }
+  .section h2 { color:var(--indigo); font-size:18px; font-weight:700; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--indigo-border); }
+  .section h3 { color:var(--violet); font-size:15px; font-weight:700; margin:20px 0 8px; }
+  .section p { margin-bottom:10px; font-size:15px; }
+  .section ul { padding-left:0; list-style:none; }
+  .section ul li { padding:5px 0 5px 22px; position:relative; font-size:15px; }
+  .section ul li::before { content:""; position:absolute; left:0; top:14px; width:8px; height:8px; border-radius:50%; background:var(--indigo-mid); }
+
+  .code-block { background:var(--code-bg); border-radius:10px; padding:18px 22px; margin:14px 0; overflow-x:auto; font-family:"Courier New", Courier, monospace; font-size:13.5px; line-height:1.75; }
+  .code-block code { color:var(--code-text); white-space:pre; }
+  .code-kw { color:#F472B6; } .code-fn { color:#34D399; } .code-str { color:#FCD34D; } .code-cmt { color:#6B7280; font-style:italic; } .code-num { color:#FB923C; }
+  .styled-table { width:100%; border-collapse:collapse; margin:14px 0; border-radius:10px; overflow:hidden; }
+  .styled-table th { background:var(--indigo); color:white; padding:12px 16px; text-align:left; font-size:13px; font-weight:600; }
+  .styled-table td { padding:10px 16px; border-bottom:1px solid var(--indigo-border); font-size:14px; }
+  .styled-table tr:nth-child(even) td { background:var(--indigo-light); }
+  .styled-table td:first-child { color:var(--violet); font-weight:700; font-family:monospace; font-size:15px; }
+  .callout { border-radius:12px; padding:15px 20px; margin:14px 0; display:flex; gap:13px; align-items:flex-start; }
+  .callout-info { background:#EEF2FF; border-left:4px solid var(--indigo); }
+  .callout-warn { background:var(--amber-light); border-left:4px solid var(--amber); }
+  .callout-success { background:var(--green-light); border-left:4px solid var(--green); }
+  .callout-icon { font-size:19px; flex-shrink:0; margin-top:2px; }
+  .callout-text { font-size:14.5px; color:var(--text-dark); line-height:1.65; }
+  .callout-text strong { display:block; margin-bottom:3px; font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:var(--text-muted); }
+  .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:14px 0; }
+  .compare-card { background:var(--indigo-light); border:1px solid var(--indigo-border); border-radius:12px; padding:18px 20px; }
+  .compare-card h4 { color:var(--indigo); font-size:14px; font-weight:700; margin-bottom:10px; }
+  .powers-grid { display:grid; grid-template-columns:1fr 1fr; gap:11px; margin:14px 0; }
+  .power-item { background:var(--indigo-light); border-radius:10px; padding:13px 16px; border-left:3px solid var(--indigo-mid); }
+  .power-item strong { display:block; color:var(--indigo); font-size:13px; margin-bottom:3px; }
+  .power-item span { font-size:13px; color:var(--text-body); }
+  .io-box { background:#F9FAFB; border:1px solid #E5E7EB; border-radius:10px; padding:14px 18px; margin:10px 0; font-family:monospace; font-size:13.5px; }
+  .io-box .io-label { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+  .io-box .io-in { color:var(--indigo); } .io-box .io-out { color:var(--green); } .io-sep { color:#D1D5DB; margin:0 6px; }
+  .questions { background:var(--indigo-light); border-radius:14px; padding:22px 26px; margin:18px 0; }
+  .questions h3 { color:var(--indigo); margin-bottom:16px; font-size:15.5px; }
+  .q-item { background:white; border:1px solid var(--indigo-border); border-radius:10px; padding:14px 18px; margin-bottom:12px; }
+  .q-num { color:var(--violet); font-weight:800; font-size:13px; margin-bottom:4px; }
+  .q-text { font-size:14px; color:var(--text-dark); margin-bottom:8px; }
+  .q-io { display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+  .q-io span { background:#F3F4F6; border:1px solid #E5E7EB; border-radius:6px; padding:3px 10px; font-family:monospace; font-size:12.5px; }
+  .q-io .q-in { color:var(--indigo); } .q-io .q-out { color:var(--green); }
+  .analogy-card { background:linear-gradient(135deg,#EEF2FF,#F5F3FF); border:1px solid var(--indigo-border); border-radius:16px; padding:24px 28px; margin:16px 0; }
+  .analogy-card h4 { color:var(--violet); font-size:15px; font-weight:700; margin-bottom:8px; }
+  .analogy-steps { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:14px; }
+  .analogy-step { background:white; border-radius:10px; padding:14px; text-align:center; border:1px solid var(--indigo-border); }
+  .analogy-step .step-icon { font-size:28px; margin-bottom:6px; }
+  .analogy-step .step-kw { color:var(--indigo); font-weight:800; font-size:13px; font-family:monospace; margin-bottom:4px; }
+  .analogy-step .step-desc { font-size:12.5px; color:var(--text-muted); line-height:1.4; }
+  .page-footer { text-align:center; padding:18px; color:var(--text-muted); font-size:12px; border-top:1px solid var(--indigo-border); letter-spacing:2px; text-transform:uppercase; margin-top:32px; }
+
+  @media(max-width:768px){
+    .sidebar{display:none;} .main{margin-left:0;} .content{padding:24px 18px;} .chapter-header{padding:36px 22px 28px;}
+    .compare-grid,.powers-grid,.analogy-steps{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h2 id="nav-vault-title">Coding5s Python Vault</h2>
+    <p id="nav-vault-sub">Active Learning System</p>
+  </div>
+  <div class="nav-label">Start Here</div>
+  <a href="#cover">📘 Cover Page</a>
+  <div class="nav-label">Chapters</div>
+  <a href="#ch1">1. System Overview</a>
+  <a href="#ch2">2. Curriculum Roadmap</a>
+  <a href="#ch3">3. Training File</a>
+  <a href="#ch4">4. Setup &amp; IDE</a>
+  <a href="#ch5">5. Stage 1 — Practice</a>
+  <a href="#ch6">6. Stage 2 — Debug</a>
+  <a href="#ch7">7. Stage 3 — Complete</a>
+  <a href="#ch8">8. Stage 4 — Refactor</a>
+  <a href="#ch9">9. Stage 5 — Extend</a>
+  <a href="#ch10">10. Projects</a>
+  <a href="#ch11">11. Final Advice</a>
+</nav>
+
+<div class="main">
+
+  <section id="cover" class="cover">
+    <div class="cover-badge" id="badge-title">Python Mastery System</div>
+    <h1 id="main-vault-title">Coding5s<br><span>Learning Vault</span></h1>
+    <p class="cover-sub" id="main-vault-sub">From passive watching to active coding. A 5-stage training system that turns programming learning into real-world developer skills.</p>
+    <div class="cover-note">
+      🎬 <strong>System Check:</strong> This interface provides single-page scannability, structural code blocks, analogies, and embedded active recall question banks. Navigate via the sidebar to dive into any chapter.
+    </div>
+    <div class="cover-footer">Compiled via Kimi Swarm</div>
+  </section>
+
+  <section id="ch1">
+    <div class="chapter-header" data-num="01">
+      <div class="chapter-num">Chapter 01</div>
+      <h1>How the Coding5s System Works</h1>
+    </div>
+    <div class="content">
+
+      <div class="section">
+        <h2>🎯 The Core Philosophy</h2>
+        <p>Learning to code is an incredible journey, and the best way to speed up your progress is by diving straight into the action. While many methods focus on watching others code, the real magic happens when you start building things by yourself.</p>
+        <p>The Coding5s system turns those early challenges into a structured training method that prioritizes practical skills, helping you gain the confidence to create your own projects from day one.</p>
+      </div>
+
+      <div class="section">
+        <h2>🧠 What is Coding5s?</h2>
+        <p>It is a training system designed to develop real-world programming skills through 5 stages where you face different types of interaction with code. We achieve this with the help of artificial intelligence tools.</p>
+        <p>The idea is simple: instead of just looking at examples or copying code, the student constantly interacts with code in different ways, simulating real-life situations that happen in a developer's day-to-day job.</p>
+      </div>
+
+      <div class="analogy-card">
+        <h4>🔄 The 5-Stage Learning Pipeline</h4>
+        <p>Think of learning Python like training at a gym. You do not just watch someone lift weights — you practice different exercises that build different muscles.</p>
+        <div class="analogy-steps">
+          <div class="analogy-step">
+            <div class="step-icon">✍️</div>
+            <div class="step-kw">Stage 1</div>
+            <div class="step-desc">Practice writing code and understanding how language concepts work.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🐛</div>
+            <div class="step-kw">Stage 2</div>
+            <div class="step-desc">Debug broken code. Identify problems and fix them so the program runs.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🧩</div>
+            <div class="step-kw">Stage 3</div>
+            <div class="step-desc">Complete missing code. Fill in blanks to match expected output.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🔧</div>
+            <div class="step-kw">Stage 4</div>
+            <div class="step-desc">Refactor working code. Reorganize to make it clearer and more efficient.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🚀</div>
+            <div class="step-kw">Stage 5</div>
+            <div class="step-desc">Extend functional code. Add new features and behaviors to existing programs.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>⚡ How It Works in Practice</h2>
+        <p>You work with a training file that contains a fully structured learning path. This file includes all the topics you will practice, organized in a logical order to master the language.</p>
+        <p>Each topic has a series of prompts specifically designed to work with AI tools like ChatGPT, Gemini, or Claude. These prompts are ready to copy and paste — you simply copy the prompt, paste it into your favorite AI chat, and you get code blocks ready for practice.</p>
+      </div>
+
+      <div class="callout callout-success">
+        <div class="callout-icon">✅</div>
+        <div class="callout-text">
+          <strong>Key Advantage</strong>
+          Since exercises are generated with AI, you can practice as many times as you want with new examples using whichever AI tool you prefer. This transforms learning into continuous training.
+        </div>
+      </div>
+
+      <div class="questions">
+        <h3>🧪 Active Recall — Chapter 1</h3>
+        <div class="q-item">
+          <div class="q-num">Q1</div>
+          <div class="q-text">What is the fundamental difference between the Coding5s system and traditional "watch and copy" learning methods?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q2</div>
+          <div class="q-text">Name all five stages of the Coding5s system and the primary skill each one trains.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q3</div>
+          <div class="q-text">Why is the use of AI tools (ChatGPT, Gemini, Claude) essential to the Coding5s workflow?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ch2">
+    <div class="chapter-header" data-num="02">
+      <div class="chapter-num">Chapter 02</div>
+      <h1>The Python Core & Scripting Roadmap</h1>
+    </div>
+    <div class="content">
+
+      <div class="section">
+        <h2>🗺️ Curriculum Philosophy</h2>
+        <p>The way we learn programming is evolving. It is time to move away from passive watching and step into active coding while learning new concepts. With the Coding5s system, you are going to be focused heavily on execution.</p>
+        <p>This curriculum follows a strict cognitive hierarchy. We move from the absolute basics to advanced scripting in a clear logical straight line, ensuring every new concept builds perfectly on the last one.</p>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-text">
+          <strong>Intentional OOP Exclusion</strong>
+          This is strictly a Python Core and Scripting course. We intentionally do NOT cover object-oriented programming (OOP) at this stage. Before you can architect complex systems, you must build muscle memory of pure logic. Throwing OOP at a beginner too early can create unnecessary frustration. We make you a master of control flow and scripting first, so when you eventually learn OOP, it becomes a natural, effortless next step.
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>📚 Learning Path Overview</h2>
+        <table class="styled-table">
+          <tr><th>Phase</th><th>Topics Covered</th><th>Skill Level</th></tr>
+          <tr><td>Foundation</td><td>Variables, Data Types, Strings</td><td>Beginner</td></tr>
+          <tr><td>Decision Making</td><td>If/Else Statements, Logical Operators</td><td>Beginner</td></tr>
+          <tr><td>Iteration Engine</td><td>For Loops, While Loops</td><td>Intermediate</td></tr>
+          <tr><td>Data Organization</td><td>Lists, Tuples, Dictionaries</td><td>Intermediate</td></tr>
+          <tr><td>Professional Blocks</td><td>Functions, Scope, Error Handling</td><td>Advanced</td></tr>
+        </table>
+      </div>
+
+      <div class="section">
+        <h2>🎓 What You Will Achieve</h2>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>Write from Scratch</strong>
+            <span>Build functional scripts to automate tasks without templates.</span>
+          </div>
+          <div class="power-item">
+            <strong>Read Any Code</strong>
+            <span>Understand other people's logic immediately on first read.</span>
+          </div>
+          <div class="power-item">
+            <strong>Debug Confidently</strong>
+            <span>Fix your own errors without panicking or giving up.</span>
+          </div>
+          <div class="power-item">
+            <strong>Jump to Any Field</strong>
+            <span>Foundation for data science, web development, or AI.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-text">
+          <strong>Training File Access</strong>
+          You can download the exact file containing the full curriculum and all the AI prompts you will need in the "Getting Ready" section, specifically in the lesson on downloading the Coding5s training file.
+        </div>
+      </div>
+
+      <div class="questions">
+        <h3>🧪 Active Recall — Chapter 2</h3>
+        <div class="q-item">
+          <div class="q-num">Q1</div>
+          <div class="q-text">Why is OOP intentionally excluded from this curriculum stage?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q2</div>
+          <div class="q-text">List the five phases of the curriculum in order, from foundation to advanced.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q3</div>
+          <div class="q-text">What are the three core abilities you will have by the end of this course?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ch3">
+    <div class="chapter-header" data-num="03">
+      <div class="chapter-num">Chapter 03</div>
+      <h1>Understanding the Coding5s Training File</h1>
+    </div>
+    <div class="content">
+
+      <div class="section">
+        <h2>📁 The Central Hub</h2>
+        <p>The training file is the central hub of your entire learning journey. This is where you will keep track of your progress and get the necessary prompts to generate the exercises you will solve with the help of AI tools.</p>
+        <p>The file contains a list of Python topics covering the fundamentals and scripting side of the language. Topics are organized in a logical learning order, selected so you can learn gradually from beginner to advanced.</p>
+      </div>
+
+      <div class="section">
+        <h2>🔍 File Structure Breakdown</h2>
+        <table class="styled-table">
+          <tr><th>Column</th><th>Purpose</th></tr>
+          <tr><td>Topic Name</td><td>Indicates which Python concept you are working on (e.g., Variables, Operators, Control Structures, Functions).</td></tr>
+          <tr><td>Stage 1</td><td>Prompt to generate practice exercises with explanations and code examples.</td></tr>
+          <tr><td>Stage 2</td><td>Prompt to generate code containing errors for you to debug and fix.</td></tr>
+          <tr><td>Stage 3</td><td>Prompt to generate incomplete code where you fill in missing lines.</td></tr>
+          <tr><td>Stage 4</td><td>Prompt to generate working but poorly structured code for refactoring.</td></tr>
+          <tr><td>Stage 5</td><td>Prompt to generate functional code where you add new features.</td></tr>
+          <tr><td>Track</td><td>Progress tracker: 1 = completed (green), 0 = pending (red), -1 = review later (orange).</td></tr>
+        </table>
+      </div>
+
+      <div class="analogy-card">
+        <h4>🗂️ The Training File as a Flight Plan</h4>
+        <p>Imagine the training file as an airline pilot's flight plan. Each row is a destination, and each stage column is a pre-flight check you must complete before takeoff.</p>
+        <div class="analogy-steps">
+          <div class="analogy-step">
+            <div class="step-icon">📋</div>
+            <div class="step-kw">Select Topic</div>
+            <div class="step-desc">Pick your destination from the topic list.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">📋</div>
+            <div class="step-kw">Copy Prompt</div>
+            <div class="step-desc">Grab the pre-flight checklist for that stage.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">✅</div>
+            <div class="step-kw">Mark Progress</div>
+            <div class="step-desc">Update the tracker to log your completion.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🎨 Progress Tracking System</h2>
+        <p>The file uses conditional formatting for visual progress tracking:</p>
+        <ul>
+          <li><strong>1 (Green + Checkmark):</strong> Lesson completed successfully.</li>
+          <li><strong>0 (Red + X):</strong> Lesson still pending — your default starting state.</li>
+          <li><strong>-1 (Orange + Icon):</strong> Mark for review later — useful for difficult lessons you want to revisit.</li>
+        </ul>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">ℹ️</div>
+        <div class="callout-text">
+          <strong>OOP Note</strong>
+          This course does not include object-oriented programming. That topic will be covered in a future course specifically dedicated to it.
+        </div>
+      </div>
+
+      <div class="questions">
+        <h3>🧪 Active Recall — Chapter 3</h3>
+        <div class="q-item">
+          <div class="q-num">Q1</div>
+          <div class="q-text">What are the three possible values in the "Track" column and what does each visual indicator mean?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q2</div>
+          <div class="q-text">Describe the workflow: what do you do after selecting a topic and copying a Stage 1 prompt?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q3</div>
+          <div class="q-text">Why is the training file described as the "central hub" of the learning system?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ch4">
+    <div class="chapter-header" data-num="04">
+      <div class="chapter-num">Chapter 04</div>
+      <h1>Installing Python and Setting Up Your IDE</h1>
+    </div>
+    <div class="content">
+
+      <div class="section">
+        <h2>🐍 Step 1: Install Python</h2>
+        <p>Open your browser and search for "Python" on Google. The official Python website will be the first result. Navigate to the Downloads section and get the standalone installer for Python 3.14.3 (or the latest stable version).</p>
+        <div class="callout callout-warn">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-text">
+            <strong>Critical Step</strong>
+            During installation, you MUST check the option "Add python.exe to PATH". If you skip this, you will have problems executing Python code later. Click the checkbox, then proceed with Install Now.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>💻 Step 2: Install PyCharm (Recommended)</h2>
+        <p>Search for "PyCharm" and go to the JetBrains website. Download and run the installer — simply click Next through the wizard until installation completes.</p>
+        <div class="callout callout-info">
+          <div class="callout-icon">ℹ️</div>
+          <div class="callout-text">
+            <strong>License Note</strong>
+            PyCharm offers about 30 days of the Professional version. Once those 30 days are up, PyCharm continues to work as the Community Edition, which is free and more than enough for this course. You will see an "Unlock" button, but you can continue using it without any problem.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🆚 Alternative: Visual Studio Code</h2>
+        <p>If you prefer, you can use Visual Studio Code instead. Search for "Visual Studio Code", download for your OS, and run the installer. Again, make sure to check "Add to PATH" during installation.</p>
+        <p>After installing VS Code, you need two essential extensions:</p>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>Python Extension</strong>
+            <span>Go to Extensions → search "Python" → Install. Enables Python code execution.</span>
+          </div>
+          <div class="power-item">
+            <strong>Jupyter Extension</strong>
+            <span>Go to Extensions → search "Jupyter" → Install. Enables notebook-style coding.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="compare-grid">
+        <div class="compare-card">
+          <h4>✅ PyCharm</h4>
+          <ul>
+            <li>Built specifically for Python</li>
+            <li>Powerful debugging tools out of the box</li>
+            <li>Intelligent code completion</li>
+            <li>30-day Pro trial, then free Community Edition</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h4>✅ VS Code</h4>
+          <ul>
+            <li>Lightweight and highly customizable</li>
+            <li>Massive extension ecosystem</li>
+            <li>Great for multi-language projects</li>
+            <li>Completely free forever</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>▶️ Verify Your Setup</h2>
+        <p>Once your IDE and Python are installed, create a new Python file and run a simple test:</p>
+        <div class="code-block"><code><span class="code-cmt"># Test your Python installation</span>
+<span class="code-fn">print</span>(<span class="code-str">"Hello, Coding5s!"</span>)
+<span class="code-fn">print</span>(<span class="code-str">"Python is ready to go."</span>)</code></div>
+        <div class="io-box">
+          <div class="io-label io-out">Expected Output</div>
+          Hello, Coding5s!<br>Python is ready to go.
+        </div>
+      </div>
+
+      <div class="questions">
+        <h3>🧪 Active Recall — Chapter 4</h3>
+        <div class="q-item">
+          <div class="q-num">Q1</div>
+          <div class="q-text">Why is checking "Add python.exe to PATH" absolutely critical during Python installation?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q2</div>
+          <div class="q-text">What happens to PyCharm after the 30-day Professional trial expires?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q3</div>
+          <div class="q-text">Which two extensions are mandatory for running Python in Visual Studio Code?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ch5">
+    <div class="chapter-header" data-num="05">
+      <div class="chapter-num">Chapter 05</div>
+      <h1>Stage 1 — Practicing Python Code</h1>
+    </div>
+    <div class="content">
+
+      <div class="section">
+        <h2>🎯 Stage Purpose</h2>
+        <p>Stage 1 is designed to help you learn new Python concepts. For each topic in the training file, you use a prompt from the Stage 1 column. This prompt asks the AI to act as a friendly tutor and explain the concept you are studying.</p>
+        <p>In addition to the explanation, the AI generates 3 to 5 small code examples for you to analyze and run. These examples go straight to the point — they focus on the topic without getting too long.</p>
+      </div>
+
+      <div class="analogy-card">
+        <h4>🎹 The Piano Practice Analogy</h4>
+        <p>Learning Python in Stage 1 is like learning piano scales. You do not play a concerto yet — you repeat simple patterns until your fingers know where to go without thinking.</p>
+        <div class="analogy-steps">
+          <div class="analogy-step">
+            <div class="step-icon">👁️</div>
+            <div class="step-kw">Read</div>
+            <div class="step-desc">Study the AI's explanation and analogy for the concept.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">⌨️</div>
+            <div class="step-kw">Type</div>
+            <div class="step-desc">Manually type every line of code into your IDE — do NOT copy-paste.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">▶️</div>
+            <div class="step-kw">Run</div>
+            <div class="step-desc">Execute the code and compare output with the AI's predicted result.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>📋 AI Response Structure</h2>
+        <p>Every Stage 1 AI response follows a consistent, easy-to-read format for each code example:</p>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>1. Explanation</strong>
+            <span>Clear intro explaining exactly what the code does.</span>
+          </div>
+          <div class="power-item">
+            <strong>2. Commented Code</strong>
+            <span>Code with inline comments guiding you line by line.</span>
+          </div>
+          <div class="power-item">
+            <strong>3. Expected Output</strong>
+            <span>Precise prediction of what the console will show.</span>
+          </div>
+          <div class="power-item">
+            <strong>4. Common Mistake</strong>
+            <span>Typical beginner error for this concept — helps you avoid it.</span>
+          </div>
+          <div class="power-item">
+            <strong>5. Mini Challenge</strong>
+            <span>Immediate test to apply what you just learned.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>📎 Working with Dataset Files</h2>
+        <p>Some topics (like "Working with CSV Files") require an additional attachment. The training file provides a link to a page where you can download the synthetic dataset. The page includes:</p>
+        <ul>
+          <li>An explanation of the synthetic dataset</li>
+          <li>Details about the column structure</li>
+          <li>Exercise ideas for that specific dataset</li>
+          <li>A download button for the raw CSV content</li>
+        </ul>
+        <div class="callout callout-warn">
+          <div class="callout-icon">⚠️</div>
+          <div class="callout-text">
+            <strong>File Location Rule</strong>
+            For CSV/JSON code to run correctly, the downloaded dataset file must be saved in the exact same project folder as your Python script. PyCharm needs to find it in the same directory.
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🤖 Cross-Model Practice</h2>
+        <p>You can use the same prompt across different AI tools (ChatGPT, Gemini, Claude). The results will be similar but not identical — explanations may vary and code examples will differ. This is a huge advantage: you can generate unlimited unique exercises for the same concept.</p>
+      </div>
+
+      <div class="callout callout-success">
+        <div class="callout-icon">💡</div>
+        <div class="callout-text">
+          <strong>Pro Tip: Type, Don't Copy</strong>
+          When working through exercises, do not copy and paste code directly from the chat into your IDE. Instead, look at the examples one at a time and type all the code manually. This is one of the best ways to learn programming — you naturally memorize syntax, and Python's interpreter teaches you by showing errors when you make small mistakes.
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🗂️ Recommended Study Order</h2>
+        <p>Complete the entire curriculum in Stage 1 first, then move to Stage 2, then Stage 3, Stage 4, and finally Stage 5. This guarantees amazing results. However, you can also jump between stages mid-topic if that fits your learning style better.</p>
+      </div>
+
+      <div class="questions">
+        <h3>🧪 Active Recall — Chapter 5</h3>
+        <div class="q-item">
+          <div class="q-num">Q1</div>
+          <div class="q-text">Why is manually typing code instead of copy-pasting considered one of the best ways to learn programming?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q2</div>
+          <div class="q-text">What are the five components of every Stage 1 code example in the AI response?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q3</div>
+          <div class="q-text">Where must a downloaded CSV dataset file be placed relative to your Python script for the code to run correctly?</div>
+          <div class="q-io">
+            <span class="q-in">Same project folder</span>
+            <span class="q-out">Correct</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ch6">
+    <div class="chapter-header" data-num="06">
+      <div class="chapter-num">Chapter 06</div>
+      <h1>Stage 2 — Debugging Python Code</h1>
+    </div>
+    <div class="content">
+
+      <div class="section">
+        <h2>🐛 Stage Purpose</h2>
+        <p>Stage 2 is the debugging stage. The goal is to learn how to identify and fix errors in code that does not work. This is an extremely important skill because in the real world, a huge part of a developer's time is spent reading code and finding bugs.</p>
+        <p>Instead of the usual analogies from Stage 1, you now get a message from a "careless developer" who has left you broken code and is asking for your help to fix it. Think of this as your personal debugging bootcamp.</p>
+      </div>
+
+      <div class="section">
+        <h2>🧩 Challenge Structure</h2>
+        <p>Each debugging challenge contains:</p>
+        <ul>
+          <li><strong>Objective:</strong> A vital hint about what exactly you need to do to fix the code.</li>
+          <li><strong>Expected Output:</strong> Exactly what should appear in the console once the code is successfully repaired.</li>
+          <li><strong>Broken Code:</strong> The code with errors — your task is to correct it, not rewrite from scratch.</li>
+        </ul>
+      </div>
+
+      <div class="analogy-card">
+        <h4>🔍 The Detective Analogy</h4>
+        <p>Debugging is like being a detective at a crime scene. The code is the crime scene, the error message is your witness, and the console output is the evidence you need to match.</p>
+        <div class="analogy-steps">
+          <div class="analogy-step">
+            <div class="step-icon">🕵️</div>
+            <div class="step-kw">Observe</div>
+            <div class="step-desc">Run the broken code and study the error message carefully.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🧠</div>
+            <div class="step-kw">Deduce</div>
+            <div class="step-desc">Use the objective hint to narrow down the suspect lines.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">✅</div>
+            <div class="step-kw">Verify</div>
+            <div class="step-desc">Fix the code and confirm the output matches the expected result.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🎯 Success Criteria</h2>
+        <p>You have succeeded when your code generates the exact expected output provided by the AI. There is no single "correct" solution — in programming, there are often several different ways to fix the same problem. Your solution might differ from what another AI suggests, and that is completely normal.</p>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-text">
+          <strong>No Helper Comments</strong>
+          These exercises won't have any helper comments to guide you. It is completely normal to feel uncertain when you stare at the screen and are not immediately sure how to fix the code. Embrace that feeling — it means you are really learning. Take a deep breath, look at the objective, and get to work.
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🆘 When You Get Stuck</h2>
+        <p>Occasionally, the code might contain errors related to concepts you have not studied yet. This can happen because exercises are AI-generated. The ideal approach:</p>
+        <ol style="margin-left:20px; margin-bottom:10px;">
+          <li>Try to solve the problem on your own first.</li>
+          <li>Research the error and try different solutions — this is fundamental to learning.</li>
+          <li>If you truly cannot move forward, copy the exercise code and ask another AI tool to analyze and fix it.</li>
+        </ol>
+        <p>By doing this, you will often end up learning new concepts you have not encountered before.</p>
+      </div>
+
+      <div class="questions">
+        <h3>🧪 Active Recall — Chapter 6</h3>
+        <div class="q-item">
+          <div class="q-num">Q1</div>
+          <div class="q-text">What are the three key elements present in every Stage 2 debugging challenge?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q2</div>
+          <div class="q-text">Why is it valuable that Stage 2 exercises have no helper comments?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q3</div>
+          <div class="q-text">If you encounter an error from a concept you have not studied yet, what is the recommended three-step approach?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ch7">
+    <div class="chapter-header" data-num="07">
+      <div class="chapter-num">Chapter 07</div>
+      <h1>Stage 3 — Completing Missing Python Code</h1>
+    </div>
+    <div class="content">
+
+      <div class="section">
+        <h2>🧩 Stage Purpose</h2>
+        <p>Stage 3 is about completing missing code. The AI generates small Python programs where some important lines related to the topic you are studying are missing. Your task is to write them so that the program functions correctly.</p>
+        <p>This stage bridges the gap between reading code (Stage 1) and writing code from scratch. You are beginning to move from passive consumption to active creation.</p>
+      </div>
+
+      <div class="section">
+        <h2>📋 Exercise Format</h2>
+        <p>Each challenge follows this structure:</p>
+        <ul>
+          <li><strong>Objective:</strong> A helpful hint pointing you toward what you need to figure out.</li>
+          <li><strong>Expected Output:</strong> Your target — exactly what the program should display after you fill in the missing code.</li>
+          <li><strong>Incomplete Code:</strong> Missing lines are clearly marked with <code># TODO</code> comments that give context and clues.</li>
+        </ul>
+      </div>
+
+      <div class="analogy-card">
+        <h4>🧱 The Construction Analogy</h4>
+        <p>Stage 3 is like building a house where the foundation and frame are already built, but you need to install the windows, doors, and roof. The structure exists — you just need to finish it.</p>
+        <div class="analogy-steps">
+          <div class="analogy-step">
+            <div class="step-icon">📐</div>
+            <div class="step-kw">Survey</div>
+            <div class="step-desc">Read the existing code and understand the structure and flow.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">📝</div>
+            <div class="step-kw">Fill</div>
+            <div class="step-desc">Write the missing lines where the # TODO markers indicate.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🔍</div>
+            <div class="step-kw">Match</div>
+            <div class="step-desc">Run the code and verify the output matches the expected result.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🔄 Workflow</h2>
+        <p>Copy the incomplete code exactly as it appears in the AI's response and paste it straight into PyCharm. That is where you will analyze the logic, write in the missing lines, and execute your code. If your output differs from the expected result, go back, analyze what you wrote, make adjustments, and run again until it matches perfectly.</p>
+        <p>Depending on topic complexity, you can expect 3 to 5 challenges per lesson to really lock in what you are learning.</p>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">💡</div>
+        <div class="callout-text">
+          <strong>Getting Unstuck</strong>
+          If you are not completely sure how to write the solution, you can copy the complete challenge (objective + expected output + incomplete code) and ask another AI to give you hints on how to complete the missing lines — without necessarily giving you the full solution right away. This preserves the learning process.
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>📎 Optional Files</h2>
+        <p>Just like in previous stages, you can upload optional dataset files (CSV, JSON, LOG). If you do not provide specific data, the AI will automatically embed sample data for you to work with.</p>
+      </div>
+
+      <div class="questions">
+        <h3>🧪 Active Recall — Chapter 7</h3>
+        <div class="q-item">
+          <div class="q-num">Q1</div>
+          <div class="q-text">What is the primary skill gap that Stage 3 bridges in the learning progression?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q2</div>
+          <div class="q-text">How are missing lines indicated in Stage 3 code examples, and what do these markers provide?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q3</div>
+          <div class="q-text">What strategy is recommended if you get stuck and do not know how to complete a missing line?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ch8">
+    <div class="chapter-header" data-num="08">
+      <div class="chapter-num">Chapter 08</div>
+      <h1>Stage 4 — Refactoring Python Code</h1>
+    </div>
+    <div class="content">
+
+      <div class="section">
+        <h2>🔧 Stage Purpose</h2>
+        <p>Stage 4 is the refactoring stage. In programming, refactoring means improving or reorganizing code without changing its external behavior. The program already works, but the code could be written in a clearer, simpler, or more efficient way.</p>
+        <p>You will receive a message from a "new developer" whose code is a mess and needs cleaning up. Your mission: put on your refactoring hat and fix those bad practices.</p>
+      </div>
+
+      <div class="section">
+        <h2>🎯 What to Look For</h2>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>Confusing Variable Names</strong>
+            <span>Replace vague names like <code>x</code> or <code>temp</code> with descriptive identifiers.</span>
+          </div>
+          <div class="power-item">
+            <strong>Inefficient Resource Management</strong>
+            <span>Close files properly, avoid redundant loops, optimize memory usage.</span>
+          </div>
+          <div class="power-item">
+            <strong>Clunky Logic</strong>
+            <span>Simplify nested conditionals, remove unnecessary complexity.</span>
+          </div>
+          <div class="power-item">
+            <strong>Tangled Code Structure</strong>
+            <span>Reorganize blocks, add whitespace, improve readability.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="analogy-card">
+        <h4>🏠 The House Renovation Analogy</h4>
+        <p>Refactoring is like renovating a house. The house already stands and functions, but the wiring is messy, the rooms are poorly laid out, and the paint is peeling. You don't demolish it — you improve it while keeping it livable.</p>
+        <div class="analogy-steps">
+          <div class="analogy-step">
+            <div class="step-icon">🔎</div>
+            <div class="step-kw">Inspect</div>
+            <div class="step-desc">Run the code to confirm it works. Note all the "messy" parts.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🔨</div>
+            <div class="step-kw">Renovate</div>
+            <div class="step-desc">Clean up names, simplify logic, improve structure.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🧪</div>
+            <div class="step-kw">Validate</div>
+            <div class="step-desc">Run again. Output must match the original exactly.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>✅ Validation Rule</h2>
+        <p>Once you have made your corrections and cleaned everything up, run the code one more time. The result in your Python console needs to match the original program output provided by the AI. If the output matches and your code is cleaner, you have officially completed the exercise.</p>
+      </div>
+
+      <div class="callout callout-success">
+        <div class="callout-icon">💼</div>
+        <div class="callout-text">
+          <strong>Real-World Relevance</strong>
+          In a real job, you aren't always writing programs from scratch. Instead, you're often working with code that someone else wrote, and your task is to understand it and make it better. Stage 4 directly simulates this professional reality.
+        </div>
+      </div>
+
+      <div class="questions">
+        <h3>🧪 Active Recall — Chapter 8</h3>
+        <div class="q-item">
+          <div class="q-num">Q1</div>
+          <div class="q-text">Define "refactoring" in the context of the Coding5s system.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q2</div>
+          <div class="q-text">List four specific bad practices you should look for when refactoring Stage 4 code.</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q3</div>
+          <div class="q-text">How do you know when a Stage 4 refactoring exercise is successfully completed?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ch9">
+    <div class="chapter-header" data-num="09">
+      <div class="chapter-num">Chapter 09</div>
+      <h1>Stage 5 — Extending Python Code</h1>
+    </div>
+    <div class="content">
+
+      <div class="section">
+        <h2>🚀 Stage Purpose</h2>
+        <p>Stage 5 is about extending existing code. The AI generates one Python program that already functions correctly. Your task is to add a new feature or functionality to that program. This is extremely common in real-world programming — most of the time you are not writing software from scratch, but working on an existing system and adding features to it.</p>
+      </div>
+
+      <div class="section">
+        <h2>🎫 The Ticket System</h2>
+        <p>Unlike previous stages where you get 3 to 5 small examples, Stage 5 gives you one single, more extensive program to work on. The exercise is framed as a "ticket" — the industry standard way developers receive bug reports, feature requests, and instructions.</p>
+        <p>Each ticket contains:</p>
+        <ul>
+          <li><strong>Title:</strong> A clear name for the feature request.</li>
+          <li><strong>Context:</strong> The core explanation and specific instructions from the "tech product manager."</li>
+          <li><strong>Expected Behavior:</strong> Detailed requirements on exactly what the code needs to achieve.</li>
+          <li><strong>Version 1.0 (Base Code):</strong> The starting point that already works.</li>
+          <li><strong>Version 1.1 (Solution):</strong> The fully implemented solution at the bottom of the response.</li>
+        </ul>
+      </div>
+
+      <div class="callout callout-warn">
+        <div class="callout-icon">🚫</div>
+        <div class="callout-text">
+          <strong>Don't Scroll to the Answer</strong>
+          The AI provides the starting code (v1.0) and the fully implemented solution (v1.1) in the same response. Try to resolve the ticket before you scroll down to look at the answer. This prompt structure was designed intentionally to force you to build your own problem-solving skills.
+        </div>
+      </div>
+
+      <div class="analogy-card">
+        <h4>🏗️ The Building Extension Analogy</h4>
+        <p>Stage 5 is like adding a new wing to an existing building. The foundation is solid, the structure is sound, but the client now needs a conference room, a parking garage, and a rooftop garden. You must extend without breaking what already works.</p>
+        <div class="analogy-steps">
+          <div class="analogy-step">
+            <div class="step-icon">📋</div>
+            <div class="step-kw">Read Ticket</div>
+            <div class="step-desc">Study the context, instructions, and expected behavior carefully.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🏗️</div>
+            <div class="step-kw">Plan Extension</div>
+            <div class="step-desc">Design how the new feature integrates with the existing codebase.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">✅</div>
+            <div class="step-kw">Implement & Verify</div>
+            <div class="step-desc">Code the feature and confirm output matches the expected v1.1 behavior.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>📁 Additional Files</h2>
+        <p>Sometimes you need to create additional files to make your code work. For example, when tackling topics like environment variables, you absolutely need a <code>.env</code> file and also a <code>.gitignore</code> file. The AI's instructions and code blocks will clearly indicate when this is necessary.</p>
+      </div>
+
+      <div class="compare-grid">
+        <div class="compare-card">
+          <h4>🆓 Free AI Models</h4>
+          <ul>
+            <li>Work well for Stages 1-3</li>
+            <li>Great for learning and debugging</li>
+            <li>May struggle with complex reasoning in Stage 5</li>
+            <li>Good for beginners and intermediate practice</li>
+          </ul>
+        </div>
+        <div class="compare-card">
+          <h4>⭐ Premium AI Models</h4>
+          <ul>
+            <li>Recommended for Stage 5 exercises</li>
+            <li>Handle deep reasoning and heavy lifting</li>
+            <li>More reliable and consistent outputs</li>
+            <li>Worth investing in: Gemini Advanced, ChatGPT+, Claude Pro</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">🧠</div>
+        <div class="callout-text">
+          <strong>Why Premium for Stage 5?</strong>
+          By Stage 5, prompts get sophisticated and force the AI to think deeply, which consumes more processing power. The high-level, real-world practice you get is more than worth the investment. Think of it as upgrading your tools as your skills grow.
+        </div>
+      </div>
+
+      <div class="questions">
+        <h3>🧪 Active Recall — Chapter 9</h3>
+        <div class="q-item">
+          <div class="q-num">Q1</div>
+          <div class="q-text">Why does Stage 5 use a "ticket system" instead of multiple small exercises?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q2</div>
+          <div class="q-text">What is the critical rule about scrolling when working on a Stage 5 ticket?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q3</div>
+          <div class="q-text">Why are premium AI models (Gemini Advanced, ChatGPT+, Claude Pro) specifically recommended for Stage 5?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ch10">
+    <div class="chapter-header" data-num="10">
+      <div class="chapter-num">Chapter 10</div>
+      <h1>Projects in the Stages</h1>
+    </div>
+    <div class="content">
+
+      <div class="section">
+        <h2>🧩 What Are Stage Projects?</h2>
+        <p>Up to this point, you have been working with small exercises focused on a single concept. But in real-world programming, software combines several or even many concepts at the same time. That is why, throughout the curriculum, you will also find projects within each stage.</p>
+        <p>These projects work exactly like the regular exercises in each stage. The only difference is that a single larger block of code is generated, combining several topics you have already studied.</p>
+      </div>
+
+      <div class="section">
+        <h2>📋 Example: Interactive User Profile Generator</h2>
+        <p>A Stage 3 project might be an interactive user profile generator. Some parts of the program have been replaced with <code># TODO</code> comments indicating the logic you must implement. Your task is to complete those parts so the project functions correctly.</p>
+        <p>Similarly, you will find projects for debugging, refactoring, and adding new features. The idea is to practice the same skills for each stage, but now working with more complete, realistic programs.</p>
+      </div>
+
+      <div class="analogy-card">
+        <h4>🎼 The Orchestra Analogy</h4>
+        <p>Single-topic exercises are like practicing one instrument. Stage projects are like playing in an orchestra — every instrument (topic) must work together to create the full piece.</p>
+        <div class="analogy-steps">
+          <div class="analogy-step">
+            <div class="step-icon">🎻</div>
+            <div class="step-kw">Variables</div>
+            <div class="step-desc">Store and manage data across the program.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🥁</div>
+            <div class="step-kw">Control Flow</div>
+            <div class="step-desc">Direct the rhythm and logic of execution.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🎺</div>
+            <div class="step-kw">Functions</div>
+            <div class="step-desc">Modularize and reuse code blocks elegantly.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>📍 Identifying Projects in the File</h2>
+        <p>Project rows in the Excel training file are formatted in <strong>bold</strong> to make them easy to identify. The topics included in each project are the ones listed directly above that project row. This creates natural topic clusters that build progressively.</p>
+      </div>
+
+      <div class="questions">
+        <h3>🧪 Active Recall — Chapter 10</h3>
+        <div class="q-item">
+          <div class="q-num">Q1</div>
+          <div class="q-text">What is the fundamental difference between a regular Stage exercise and a Stage project?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q2</div>
+          <div class="q-text">How are project rows visually distinguished from regular topic rows in the training file?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q3</div>
+          <div class="q-text">Which topics are included in a given project row?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ch11">
+    <div class="chapter-header" data-num="11">
+      <div class="chapter-num">Chapter 11</div>
+      <h1>Final Advice</h1>
+    </div>
+    <div class="content">
+
+      <div class="section">
+        <h2>💡 Four Pillars of Success</h2>
+        <div class="powers-grid">
+          <div class="power-item">
+            <strong>1. Consistency Over Intensity</strong>
+            <span>You do not need many hours a day. Even 30-40 minutes daily working through the stages leads to enormous progress over time. Plus, you will probably find that with this method, it is hard to get bored — you are constantly solving different types of challenges.</span>
+          </div>
+          <div class="power-item">
+            <strong>2. Do Not Memorize Everything</strong>
+            <span>In programming, it is completely normal to forget syntax details. What matters is understanding the concepts as best as you can and getting used to reading, writing, and modifying code constantly.</span>
+          </div>
+          <div class="power-item">
+            <strong>3. Embrace Mistakes</strong>
+            <span>A huge part of learning to program happens when something does not work and you have to figure out why. Errors, bugs, and moments of confusion are a normal and necessary part of the process.</span>
+          </div>
+          <div class="power-item">
+            <strong>4. Leverage AI Power</strong>
+            <span>The prompts in your training file are highly detailed and intentionally complex. You do not have to worry about creating prompts or fighting with the AI to get the right exercises. Your only job is to focus on learning and writing code.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-success">
+        <div class="callout-icon">🌱</div>
+        <div class="callout-text">
+          <strong>Living Prompt System</strong>
+          This prompt system is alive. The training file will be continuously updated and evolved to ensure you always have the absolute best learning experience.
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>🤖 Why Coding Still Matters in the AI Era</h2>
+        <p>One important thing to keep in mind: knowing how to code will remain essential, even in an era where AI can generate a lot of it. Because sooner or later, you will have to read, understand, or fix code generated by an AI. And to do that correctly, you need to know how to program.</p>
+        <p>If you keep practicing with the stages of this system and complete the entire curriculum, you will be developing the fundamental skills that real-world programmers use every day.</p>
+      </div>
+
+      <div class="analogy-card">
+        <h4>🎯 The Marathon Analogy</h4>
+        <p>Learning to code is not a sprint — it is a marathon. The Coding5s system is your training plan. You do not run 26 miles on day one. You run a little every day, and one day you cross the finish line without even noticing how far you have come.</p>
+        <div class="analogy-steps">
+          <div class="analogy-step">
+            <div class="step-icon">📅</div>
+            <div class="step-kw">Daily</div>
+            <div class="step-desc">30-40 minutes of focused practice.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">📈</div>
+            <div class="step-kw">Progress</div>
+            <div class="step-desc">Track completion in the training file.</div>
+          </div>
+          <div class="analogy-step">
+            <div class="step-icon">🏆</div>
+            <div class="step-kw">Mastery</div>
+            <div class="step-desc">Complete all 5 stages for every topic.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout callout-info">
+        <div class="callout-icon">🚀</div>
+        <div class="callout-text">
+          <strong>Ready to Start?</strong>
+          Now it is time to start practicing. Download the training file, install Python and your IDE, pick your first topic, and dive into Stage 1. The journey from passive learner to active developer begins with a single line of code.
+        </div>
+      </div>
+
+      <div class="questions">
+        <h3>🧪 Active Recall — Chapter 11</h3>
+        <div class="q-item">
+          <div class="q-num">Q1</div>
+          <div class="q-text">What is the recommended daily study duration, and why is consistency more important than long sessions?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q2</div>
+          <div class="q-text">Why will knowing how to code remain essential even as AI generates more code?</div>
+        </div>
+        <div class="q-item">
+          <div class="q-num">Q3</div>
+          <div class="q-text">What does it mean that the prompt system is "alive," and why is this beneficial for learners?</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    Coding5s Python Learning Vault · Complete Automation · Built for Active Mastery
+  </footer>
+</div>
+</body>
+</html>
